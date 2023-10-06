@@ -34,7 +34,7 @@ public class Constants {
         public final static int RIGHT_FRONT_PDP_ID = 0;
         public final static int RIGHT_REAR_PDP_ID = 0;
 
-        // DPP
+        // DPR
 		public final static double LEFT_FRONT_DPR = 1; // meters
 		public final static double LEFT_REAR_DPR = 1; // meters
 		public final static double RIGHT_FRONT_DPR = 1; // meters
@@ -71,6 +71,10 @@ public class Constants {
         public final static boolean APPLY_VELOCITY_SCALAR = true;
         public final static double DRIVE_WHEEL_RADIUS = 0.01; // meters -- Subject to change
         public final static double DRIVE_GEARBOX_RATIO = 100; // Subject to change
+
+        // Invert Direction
+		public final static boolean INVERT_RIGHT = false;
+		public final static boolean INVERT_LEFT = true;
     }
 
 }
