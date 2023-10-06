@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.custom.LunaSparkMax;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.custom.LunaSparkMax.Presets;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -68,7 +69,7 @@ public class Drivebase extends SubsystemBase {
 
     private HashMap<String, Double> pidConstants = new HashMap<String, Double>();
 	private HashMap<String, NetworkTableEntry> pidNTEntries = new HashMap<String, NetworkTableEntry>();
-	private HashMap<String, NetworkTableEntry> shuffleboardEntries = new HashMap<String, NetworkTableEntry>();
+	private HashMap<String, GenericEntry> shuffleboardEntries = new HashMap<String, GenericEntry>();
 	private SparkMaxPIDController[] pidControllers;
 
     private static SendableChooser<InputScaling> scalingChooser = new SendableChooser<>();
