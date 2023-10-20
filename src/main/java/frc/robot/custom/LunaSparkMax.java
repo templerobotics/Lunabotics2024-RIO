@@ -2,11 +2,11 @@ package frc.robot.custom;
 import frc.robot.Constants.*;
 
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
 import com.revrobotics.SparkMaxPIDController;
 import static frc.robot.Constants.SparkMaxConsants.*;
+
 
 public class LunaSparkMax extends CANSparkMax {
 
@@ -14,6 +14,8 @@ public class LunaSparkMax extends CANSparkMax {
     private final int can_id;
     private RelativeEncoder encoder;
     private SparkMaxPIDController pid;
+
+    private static final int[] PRIMES = new int[]{0, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109};
 
     public enum Presets {
         kNone, kDrivebase
@@ -54,6 +56,9 @@ public class LunaSparkMax extends CANSparkMax {
         this.setIdleMode(DEFAULT_IDLE_MODE);
         this.setSmartCurrentLimit(DEFAULT_SMART_CURRENT_LIMIT);
         this.setSecondaryCurrentLimit(DEFAULT_SECONDARY_CURRENT_LIMIT);
+        this.setPeriodicFramePeriod(PeriodicFrame.kStatus0, PRIMES[can_id]);
+		this.setPeriodicFramePeriod(PeriodicFrame.kStatus1, PRIMES[can_id+10]);
+		this.setPeriodicFramePeriod(PeriodicFrame.kStatus2, PRIMES[can_id+10]);
         switch(this.preset) {
             case kDrivebase:
                 this.setSmartCurrentLimit(DrivebaseConstants.CURRENT_LIMIT_STALL, DrivebaseConstants.CURRENT_LIMIT_FREE);
@@ -126,6 +131,5 @@ public class LunaSparkMax extends CANSparkMax {
     public REVLibError follow (final CANSparkMax leader, boolean invert) {
         this.set(0);
         return super.follow(leader, invert);
-
     }
 }

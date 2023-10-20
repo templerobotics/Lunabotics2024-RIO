@@ -4,9 +4,28 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 public class Constants {
 
-    public final static class ControllerConstants {
-        public final static int XBOX_CONTROLLER_DRIVER = 0;
+    public final static class GlobalConstants{
+        // Given side of a mechanism 
         
+		public static enum RobotSide{
+			Left, Right;
+		}
+
+        // Position of a given mechanism
+		public static enum MechanismPosition{
+			Top, Bottom;
+		}
+
+		public static boolean ENABLE_TEST_DASHBOARDS = true;
+	}
+
+    public final static class ControllerConstants {
+        // Controller IDs
+		public final static int XBOX_CONTROLLER_DRIVER = 0;
+		public final static int XBOX_CONTROLLER_OPERATOR = 1;
+
+		// Deadzones
+		public final static double AXIS_DEADZONE = 0.08; 
     }
     
     public final static class MathConstants {
