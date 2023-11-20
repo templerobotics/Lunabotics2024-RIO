@@ -4,9 +4,28 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 public class Constants {
 
-    public final static class ControllerConstants {
-        public final static int XBOX_CONTROLLER_DRIVER = 0;
+    public final static class GlobalConstants{
+        // Given side of a mechanism 
         
+		public static enum RobotSide{
+			Left, Right;
+		}
+
+        // Position of a given mechanism
+		public static enum MechanismPosition{
+			Top, Bottom;
+		}
+
+		public static boolean ENABLE_TEST_DASHBOARDS = true;
+	}
+
+    public final static class ControllerConstants {
+        // Controller IDs
+		public final static int XBOX_CONTROLLER_DRIVER = 0;
+		public final static int XBOX_CONTROLLER_OPERATOR = 1;
+
+		// Deadzones
+		public final static double AXIS_DEADZONE = 0.08; 
     }
     
     public final static class MathConstants {
@@ -23,10 +42,10 @@ public class Constants {
     public final static class DrivebaseConstants {
 
         // Motor Controllers
-        public final static int LEFT_FRONT_CAN_ID = 4;
-        public final static int LEFT_REAR_CAN_ID = 5;
-        public final static int RIGHT_FRONT_CAN_ID = 6;
-        public final static int RIGHT_REAR_CAN_ID = 7;
+        public final static int LEFT_FRONT_CAN_ID = 2;
+        public final static int LEFT_REAR_CAN_ID = 3;
+        public final static int RIGHT_FRONT_CAN_ID = 4;
+        public final static int RIGHT_REAR_CAN_ID = 5;
 
         // PDP
         public final static int LEFT_FRONT_PDP_ID = 0;
@@ -34,7 +53,7 @@ public class Constants {
         public final static int RIGHT_FRONT_PDP_ID = 0;
         public final static int RIGHT_REAR_PDP_ID = 0;
 
-        // DPP
+        // DPR
 		public final static double LEFT_FRONT_DPR = 1; // meters
 		public final static double LEFT_REAR_DPR = 1; // meters
 		public final static double RIGHT_FRONT_DPR = 1; // meters
@@ -71,6 +90,10 @@ public class Constants {
         public final static boolean APPLY_VELOCITY_SCALAR = true;
         public final static double DRIVE_WHEEL_RADIUS = 0.01; // meters -- Subject to change
         public final static double DRIVE_GEARBOX_RATIO = 100; // Subject to change
+
+        // Invert Direction
+		public final static boolean INVERT_RIGHT = false;
+		public final static boolean INVERT_LEFT = true;
     }
 
 }
