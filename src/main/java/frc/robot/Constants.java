@@ -92,8 +92,25 @@ public class Constants {
         public final static double DRIVE_GEARBOX_RATIO = 100; // Subject to change
 
         // Invert Direction
+        //
 		public final static boolean INVERT_RIGHT = false;
 		public final static boolean INVERT_LEFT = true;
+    }
+
+    public final static class DiggingConstants {
+
+        // Leadscrew
+        //
+        public final static int LEADSCREW_1_CAN_ID = 6;
+        public final static int LEADSCREW_2_CAN_ID = 7;
+        public final static double LEADSCREW_MAX_SPEED = 1; // For leadscrews without PIDs
+        public final static double LEADSCREW_MAX_ERROR = 1; // Rotations
+        public final static double LEADSCREW_MAX_TRAVEL = 13000; // Native Units
+        public final static double LEADSCREW_kP = 0.0000000015;
+		public final static double LEADSCREW_kI = 0.000002;
+		public final static double LEADSCREW_kD = 0.000005;
+		public final static double LEADSCREW_kIZ = 20;
+		public final static double LEADSCREW_kFF = 0.000080;
     }
 
 }
