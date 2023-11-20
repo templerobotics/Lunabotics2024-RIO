@@ -42,10 +42,10 @@ public class Constants {
     public final static class DrivebaseConstants {
 
         // Motor Controllers
-        public final static int LEFT_FRONT_CAN_ID = 4;
-        public final static int LEFT_REAR_CAN_ID = 5;
-        public final static int RIGHT_FRONT_CAN_ID = 6;
-        public final static int RIGHT_REAR_CAN_ID = 7;
+        public final static int LEFT_FRONT_CAN_ID = 2;
+        public final static int LEFT_REAR_CAN_ID = 3;
+        public final static int RIGHT_FRONT_CAN_ID = 4;
+        public final static int RIGHT_REAR_CAN_ID = 5;
 
         // PDP
         public final static int LEFT_FRONT_PDP_ID = 0;

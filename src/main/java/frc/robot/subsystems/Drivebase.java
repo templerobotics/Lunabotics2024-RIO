@@ -4,12 +4,13 @@ import static frc.robot.Constants.DrivebaseConstants.*;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.custom.LunaSparkMax.Presets;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.custom.LunaSparkTest;
+import frc.robot.custom.LunaSparkMax;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
@@ -21,13 +22,13 @@ import static frc.robot.Constants.GlobalConstants.*;
 import java.util.HashMap;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
-
+ 
 public class Drivebase extends SubsystemBase {
     // Motor Initializations
-    private final LunaSparkTest m_leftFront;
-    private final LunaSparkTest m_leftRear;
-    private final LunaSparkTest m_rightFront;
-    private final LunaSparkTest m_rightRear;
+    private final LunaSparkMax m_leftFront;
+    private final LunaSparkMax m_leftRear;
+    private final LunaSparkMax m_rightFront;
+    private final LunaSparkMax m_rightRear;
 
     // Encoder Initializations
     private final RelativeEncoder e_leftFront;
@@ -77,10 +78,10 @@ public class Drivebase extends SubsystemBase {
     
 
     public Drivebase() {
-        m_leftFront = new LunaSparkTest(LEFT_FRONT_CAN_ID, MotorType.kBrushless, Presets.kDrivebase);
-        m_leftRear = new LunaSparkTest(LEFT_REAR_CAN_ID, MotorType.kBrushless, Presets.kDrivebase);
-        m_rightFront = new LunaSparkTest(RIGHT_FRONT_CAN_ID, MotorType.kBrushless, Presets.kDrivebase);
-        m_rightRear = new LunaSparkTest(RIGHT_REAR_CAN_ID, MotorType.kBrushless, Presets.kDrivebase);
+        m_leftFront = new LunaSparkMax(LEFT_FRONT_CAN_ID, MotorType.kBrushless);
+        m_leftRear = new LunaSparkMax(LEFT_REAR_CAN_ID, MotorType.kBrushless);
+        m_rightFront = new LunaSparkMax(RIGHT_FRONT_CAN_ID, MotorType.kBrushless);
+        m_rightRear = new LunaSparkMax(RIGHT_REAR_CAN_ID, MotorType.kBrushless);
 
         e_leftFront = m_leftFront.getEncoder();
         e_leftRear = m_leftRear.getEncoder();
@@ -102,14 +103,14 @@ public class Drivebase extends SubsystemBase {
         e_leftFront.setPositionConversionFactor(LEFT_FRONT_DPR);
         e_leftRear.setPositionConversionFactor(LEFT_REAR_DPR);
         e_rightFront.setPositionConversionFactor(RIGHT_FRONT_DPR);
-        e_rightRear.setPosition(RIGHT_REAR_DPR);
+        e_rightRear.setPositionConversionFactor(RIGHT_REAR_DPR);
 
         m_leftFront.burnFlash();
         m_leftRear.burnFlash();
         m_rightFront.burnFlash();
         m_rightRear.burnFlash();
 
-        leftGroup = new MotorControllerGroup(m_leftFront, m_leftFront);
+        leftGroup = new MotorControllerGroup(m_leftFront, m_leftRear);
         rightGroup = new MotorControllerGroup(m_rightFront, m_rightRear);
 
         createDashboardData();
@@ -429,9 +430,9 @@ public class Drivebase extends SubsystemBase {
 		boolean unitFlag = APPLY_VELOCITY_SCALAR; // This solves a "cannot resolve import" error for whatever reason
 		shuffleboardEntries.get("speed-units").setString(unitFlag ? "m/s" : "RPM");
 		shuffleboardEntries.get("speed-lf").setDouble(LunaMathUtils.roundToPlace(e_leftFront.getVelocity(), 2));
-		shuffleboardEntries.get("speed-lf").setDouble(LunaMathUtils.roundToPlace(e_leftRear.getVelocity(), 2));
-		shuffleboardEntries.get("speed-lf").setDouble(LunaMathUtils.roundToPlace(e_rightFront.getVelocity(), 2));
-		shuffleboardEntries.get("speed-lf").setDouble(LunaMathUtils.roundToPlace(e_rightRear.getVelocity(), 2));
+		shuffleboardEntries.get("speed-lr").setDouble(LunaMathUtils.roundToPlace(e_leftRear.getVelocity(), 2));
+		shuffleboardEntries.get("speed-rf").setDouble(LunaMathUtils.roundToPlace(e_rightFront.getVelocity(), 2));
+		shuffleboardEntries.get("speed-rr").setDouble(LunaMathUtils.roundToPlace(e_rightRear.getVelocity(), 2));
 
 		// navX IMU
         /*
