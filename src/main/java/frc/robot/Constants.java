@@ -96,4 +96,66 @@ public class Constants {
 		public final static boolean INVERT_LEFT = true;
     }
 
+    public final static class DiggingConstants {
+		// Belt
+		public final static int BELT_1_CAN_ID = 2;
+		public final static int BELT_1_PDP_ID = 0;
+		public final static int BELT_2_CAN_ID = 9;
+		public final static int BELT_2_PDP_ID = 0;
+		public final static boolean BELT_INVERT = true;
+		public final static double BELT_MAX_ACCEL = 5760; // RPM/s
+		public final static double BELT_MAX_VEL = 11000; // RPM
+		public final static double BELT_MIN_VEL = 10; // RPM
+		public final static double BELT_MAX_ERROR = 50; // Rotations
+		public final static double BELT_VELOCITY_SCALAR = 1; // 6.65e-5
+		public final static double BELT_kP = 0.000026;
+		public final static double BELT_kI = 0.000001;
+		public final static double BELT_kD = 0.0001;
+		public final static double BELT_kIZ = 20;
+		public final static double BELT_kFF = 0.000085;
+		public final static double BELT_MAX_OUTPUT = 0.9;
+		public final static double BELT_MIN_OUTPUT = -0.9;
+		public final static int BELT_CURRENT_LIMIT_STALL = 20;
+		public final static int BELT_CURRENT_LIMIT_FREE = 10;
+		public final static int BELT_SECNDARY_CURRENT_LIMIT = 22;
+
+		// Leadscrew
+		public final static int LEADSCREW_1_CAN_ID = 1;
+		public final static int LEADSCREW_1_PDP_ID = 0;
+		public final static int LEADSCREW_2_CAN_ID = 8;
+		public final static int LEADSCREW_2_PDP_ID = 0;
+		public final static boolean LEADSCREW_INVERT = true;
+		public final static double LEADSCREW_MAX_ACCEL = 11000 * 0.5; // RPM/s
+		public final static double LEADSCREW_MAX_VEL = 11000 * 0.5; // RPM
+		public final static double LEADSCREW_MIN_VEL = 10; // RPM
+		public final static double LEADSCREW_MAX_ERROR = 1; // Rotations
+		public final static double LEADSCREW_MAX_TRAVEL = 13000; // Native Units
+		public final static double LEADSCREW_MAX_SPEED = 1; // For leadscrews without PIDs
+		public final static double LEADSCREW_EXTENDED_POS = 13000; //TODO: Put a real value here
+		public final static double LEADSCREW_kP = 0.0000000015;
+		public final static double LEADSCREW_kI = 0.000002;
+		public final static double LEADSCREW_kD = 0.000005;
+		public final static double LEADSCREW_kIZ = 20;
+		public final static double LEADSCREW_kFF = 0.000080;
+		public final static double LEADSCREW_MAX_OUTPUT = .9;
+		public final static double LEADSCREW_MIN_OUTPUT = -.9;
+		public final static int LEADSCREW_CURRENT_LIMIT_STALL = 20;
+		public final static int LEADSCREW_CURRENT_LIMIT_FREE = 10;
+		public final static int LEADSCREW_SECNDARY_CURRENT_LIMIT = 22;
+		public final static IdleMode LEADSCREW_IDLE_MODE = IdleMode.kBrake;
+
+		// Linear Actuator
+		public final static int LINEAR_1_DIO_PIN = 9;
+		public final static int LINEAR_1_ANALOG_PIN = 0;
+		public final static int LINEAR_1_PDP_ID = 0;
+		public final static int LINEAR_2_DIO_PIN = 10;
+		public final static int LINEAR_2_ANALOG_PIN = 1;
+		public final static int LINEAR_2_PDP_ID = 0;
+		public final static boolean LINEAR_INVERT = true;
+		public final static double LINEAR_DEADBAND = .01;
+		public final static double LINEAR_MIN_TRAVEL = .01;
+		public final static double LINEAR_MAX_TRAVEL = 0.55;
+		public final static double LINEAR_2_ADJUSTMENT = -0.02;
+	}
+
 }

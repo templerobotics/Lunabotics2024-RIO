@@ -18,7 +18,7 @@ public class LunaSparkMax extends CANSparkMax {
     private static final int[] PRIMES = new int[]{0, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109};
 
     public enum Presets {
-        kNone, kDrivebase
+        kNone, kDrivebase, kDiggingBelt, kDiggingLeadscrew
     }
 
     /**
@@ -114,6 +114,32 @@ public class LunaSparkMax extends CANSparkMax {
                 pid.setFF(DrivebaseConstants.PID_kFF);
                 pid.setOutputRange(DrivebaseConstants.MIN_OUTPUT, DrivebaseConstants.MAX_OUTPUT);
                 break;
+
+            case kDiggingBelt:
+				pid.setSmartMotionMaxVelocity(DiggingConstants.BELT_MAX_VEL, 0);
+				pid.setSmartMotionMaxAccel(DiggingConstants.BELT_MAX_ACCEL, 0);
+				pid.setSmartMotionMinOutputVelocity(DiggingConstants.BELT_MIN_VEL, 0);
+				pid.setSmartMotionAllowedClosedLoopError(DiggingConstants.BELT_MAX_ERROR, 0);
+				pid.setP(DiggingConstants.BELT_kP);
+				pid.setI(DiggingConstants.BELT_kI);
+				pid.setD(DiggingConstants.BELT_kD);
+				pid.setIZone(DiggingConstants.BELT_kIZ);
+				pid.setFF(DiggingConstants.BELT_kFF);
+				pid.setOutputRange(DiggingConstants.BELT_MIN_OUTPUT, DiggingConstants.BELT_MAX_OUTPUT);
+				break;
+
+            case kDiggingLeadscrew:
+				pid.setSmartMotionMaxVelocity(DiggingConstants.LEADSCREW_MAX_VEL, 0);
+				pid.setSmartMotionMaxAccel(DiggingConstants.LEADSCREW_MAX_ACCEL, 0);
+				pid.setSmartMotionMinOutputVelocity(DiggingConstants.LEADSCREW_MIN_VEL, 0);
+				pid.setSmartMotionAllowedClosedLoopError(DiggingConstants.LEADSCREW_MAX_ERROR, 0);
+				pid.setP(DiggingConstants.LEADSCREW_kP);
+				pid.setI(DiggingConstants.LEADSCREW_kI);
+				pid.setD(DiggingConstants.LEADSCREW_kD);
+				pid.setIZone(DiggingConstants.LEADSCREW_kIZ);
+				pid.setFF(DiggingConstants.LEADSCREW_kFF);
+				pid.setOutputRange(DiggingConstants.LEADSCREW_MIN_OUTPUT, DiggingConstants.LEADSCREW_MAX_OUTPUT);
+				break;
             default: 
                 break;
         }
