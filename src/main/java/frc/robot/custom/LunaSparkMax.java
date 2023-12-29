@@ -18,7 +18,7 @@ public class LunaSparkMax extends CANSparkMax {
     private static final int[] PRIMES = new int[]{0, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109};
 
     public enum Presets {
-        kNone, kDrivebase
+        kNone, kDrivebase, kDiggingBelt, kDiggingLeadscrew;
     }
 
     /**

@@ -82,16 +82,26 @@ public class DiggingLeadscrew extends SubsystemBase {
 
         createDashboardData();
 
+        if (ENABLE_TEST_DASHBOARDS) {
+			reportInitialPID();
+			pidConstants.put("leadscrew-kP", LEADSCREW_kP);
+			pidConstants.put("leadscrew-kI", LEADSCREW_kI);
+			pidConstants.put("leadscrew-kD", LEADSCREW_kD);
+			pidConstants.put("leadscrew-kIZ", LEADSCREW_kIZ);
+			pidConstants.put("leadscrew-kFF", LEADSCREW_kFF);
+			pidConstants.put("leadscrew-setpoint", 0.0);
+		}
 
     }
 
     @Override
-    public void periodic() {
-        // This method will be called once per scheduler run
-        checkLimits();
-        reportSensors();
-        if (ENABLE_TEST_DASHBOARDS) checkPIDGains();
-    }
+	public void periodic() {
+		// This method will be called once per scheduler run
+		checkLimits();
+		reportSensors();
+		if (ENABLE_TEST_DASHBOARDS)
+			checkPIDGains();
+	}
 
     private void createDashboardData() {
         shuffleboardEntries.put("screw-init", Shuffleboard.getTab("Competition").add("Screw Init", leadscrewInitialized).withSize(1, 1).withPosition(5, 0).getEntry());
@@ -181,7 +191,7 @@ public class DiggingLeadscrew extends SubsystemBase {
 
     public void leadscrewSpeed(double speed) {
         if (e_leadscrew.getPosition() <= LEADSCREW_MAX_ERROR && speed < 0) return;
-        if (e_leadscrew.getPosition() >= LEADSCREW_MAX_TRAVEL-LEADSCREW_2_CAN_ID && speed > 0) return;
+        if (e_leadscrew.getPosition() >= LEADSCREW_MAX_TRAVEL-LEADSCREW_MAX_ERROR && speed > 0) return;
         leadscrewState = LeadscrewState.Traveling;
         m_leadscrew1.set(speed);
     }
@@ -221,36 +231,44 @@ public class DiggingLeadscrew extends SubsystemBase {
     }
 
     private void checkPIDGains() {
-        for (String pidConstant : pidConstants.keySet()) {
-            double newVal = pidNTEntries.get(pidConstant).getDouble(pidConstants.get(pidConstant));
-            if (newVal == pidConstants.get(pidConstant)) continue;
-            String [] split = pidConstant.split("-", 2);
-            switch (split[1]) {
-                case "kP":
-                    p_leadscrew.setP(newVal);
-                    break;
-                case "kI":
-                    p_leadscrew.setI(newVal);
-                    break;
-                case "kD":
-                    p_leadscrew.setD(newVal);
-                    break;
-                case "kIZ":
-                    p_leadscrew.setIZone(newVal);
-                    break;
-                case "kFF":
-                    p_leadscrew.setFF(newVal);
-                    break;
-                case "setpoint":
-                    p_leadscrew.setReference(newVal, ControlType.kSmartMotion);
-                    break;
-                default:
-                    break;
-            }
-            pidConstants.put(pidConstant, newVal);
-        }
-        pidNTEntries.get("leadscrew-position").setDouble(e_leadscrew.getPosition());
-    }
+		for (String pidConstant : pidConstants.keySet()) {
+			double newVal = pidNTEntries.get(pidConstant).getDouble(pidConstants.get(pidConstant));
+			if (newVal == pidConstants.get(pidConstant))
+				continue;
+			// System.out.println("LS: " + pidConstant + " value updated: " + newVal);
+			String[] split = pidConstant.split("-", 2);
+			switch (split[1]) {
+				case "kP":
+					p_leadscrew.setP(newVal);
+					break;
+
+				case "kI":
+					p_leadscrew.setI(newVal);
+					break;
+
+				case "kD":
+					p_leadscrew.setD(newVal);
+					break;
+
+				case "kIZ":
+					p_leadscrew.setIZone(newVal);
+					break;
+
+				case "kFF":
+					p_leadscrew.setFF(newVal);
+					break;
+
+				case "setpoint":
+					p_leadscrew.setReference(newVal, ControlType.kSmartMotion);
+					break;
+
+				default:
+					break;
+			}
+			pidConstants.put(pidConstant, newVal);
+		}
+		pidNTEntries.get("leadscrew-position").setDouble(e_leadscrew.getPosition());
+	}
 
     private void reportSensors() {
         // Initialization Status
