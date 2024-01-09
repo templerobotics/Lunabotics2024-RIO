@@ -51,8 +51,8 @@ public class DiggingLinearActuator extends SubsystemBase {
     private HashMap<String, GenericEntry> shuffleboardEntries = new HashMap<String, GenericEntry>();
 
     public DiggingLinearActuator() {
-        m_linear1 = new LunaSparkMax(LINEAR_1_CAN_ID, MotorType.kBrushless);
-        m_linear2 = new LunaSparkMax(LINEAR_2_CAN_ID, MotorType.kBrushless);
+        m_linear1 = new LunaSparkMax(LINEAR_1_CAN_ID, MotorType.kBrushed);
+        m_linear2 = new LunaSparkMax(LINEAR_2_CAN_ID, MotorType.kBrushed);
 
         e_linear1 = m_linear1.getEncoder();
         e_linear2 = m_linear2.getEncoder();
