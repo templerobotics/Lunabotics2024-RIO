@@ -7,7 +7,6 @@
 
 package frc.robot.commands;
 
-import frc.robot.custom.LunaMathUtils;
 import frc.robot.subsystems.Drivebase;
 import frc.robot.subsystems.Drivebase.ScalarFunction;
 // import frc.robot.subsystems.digging.DiggingLeadscrew.LeadscrewStatus;
@@ -74,7 +73,7 @@ public class XboxDrive extends CommandBase {
 		else if (turn < -AXIS_DEADZONE && Math.abs(throttle) > AXIS_DEADZONE) { // if we're heading left
 			leftSpeed = throttle * (1 + turn); // slow down the left by a proportional amount
 			rightSpeed = throttle;
-		} 
+		}
 		else if (Math.abs(throttle) > AXIS_DEADZONE) {
 			leftSpeed = throttle;
 			rightSpeed = throttle;

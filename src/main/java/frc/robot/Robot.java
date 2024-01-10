@@ -12,7 +12,6 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.custom.LunaMathUtils;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.custom.LunaMathUtils;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -24,6 +23,7 @@ public class Robot extends TimedRobot {
   private Command c_XboxDrive;
   private Command c_OperatorDrive;
 	private Command c_InitializeLeadscrew;
+  private Command c_InitializeLinearActuator;
   
   private RobotContainer m_robotContainer;
 
@@ -44,6 +44,7 @@ public class Robot extends TimedRobot {
     c_XboxDrive = m_robotContainer.getXboxDrive();
     c_OperatorDrive = m_robotContainer.getOperatorDrive();
     c_InitializeLeadscrew = m_robotContainer.getInitializeLeadscrewCommand();
+    c_InitializeLinearActuator = m_robotContainer.getInitializeLinearCommand();
     //c_XboxDrive = m_robotContainer.getXboxDrive();
     //nt_FPGATimestamp = Shuffleboard.getTab("Competition").add("FPGA Time", LunaMathUtils.roundToPlace(Timer.getFPGATimestamp(), 2)).withSize(1, 1).withPosition(0, 0).getEntry();
   
@@ -107,6 +108,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
     LiveWindow.setEnabled(false);
     if (!m_robotContainer.isLeadscrewInitialized()) c_InitializeLeadscrew.schedule();
+    if (!m_robotContainer.isLinearActuatorInitialized()) c_InitializeLinearActuator.schedule();
   }
 
   /** This function is called periodically during test mode. */

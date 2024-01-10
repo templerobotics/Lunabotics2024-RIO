@@ -22,7 +22,13 @@ import frc.robot.commands.init.leadscrew.InitLeadscrewUp;
 import frc.robot.commands.digging.DigForward;
 import frc.robot.commands.digging.DigReverse;
 import frc.robot.subsystems.Digging.DiggingLeadscrew;
+import frc.robot.subsystems.Digging.DiggingLinearActuator;
 import static frc.robot.ButtonMapping.*;
+
+import frc.robot.commands.digging.LowerLinearActuator;
+import frc.robot.commands.digging.RaiseLinearActuator;
+import frc.robot.commands.init.InitLinearActuator;
+import frc.robot.commands.digging.LinearActuatorSetpoint;
 // import frc.robot.subsystems.Digging.DiggingLinearActuator;
 
 public class RobotContainer {
@@ -32,8 +38,7 @@ public class RobotContainer {
     // private final Dumping s_Dumping = new Dumping();
     private final DiggingLeadscrew s_DiggingLeadscrew = new DiggingLeadscrew();
     private final DiggingBelt s_DiggingBelt = new DiggingBelt();
-    // private final DiggingLinearActuator s_DiggingLinearActuator = new DiggingLinearActuator();
-    // private final LightSignal s_LightSignal = new LightSignal();
+    private final DiggingLinearActuator s_DiggingLinearActuator = new DiggingLinearActuator();
 
 
 
@@ -54,10 +59,15 @@ public class RobotContainer {
     private final InitLeadscrewDown c_InitLeadscrewDown = new InitLeadscrewDown(s_DiggingLeadscrew);
 	private final InitLeadscrewUp c_InitLeadscrewUp = new InitLeadscrewUp(s_DiggingLeadscrew);
     
-    
+	private final RaiseLinearActuator c_RaiseLinearActuator = new RaiseLinearActuator(s_DiggingLinearActuator);
+	private final LowerLinearActuator c_LowerLinearActuator = new LowerLinearActuator(s_DiggingLinearActuator);
+	private final LinearActuatorSetpoint c_LinearActuatorSetpoint = new LinearActuatorSetpoint(s_DiggingLinearActuator);
+    private final InitLinearActuator c_InitLinearActuator = new InitLinearActuator(s_DiggingLinearActuator);
+
     public RobotContainer() {
         s_Drivebase.resetEncoders();
         configureButtonBindings();
+		Shuffleboard.getTab("Competition").getLayout("LACommand").add("Command Setpoint", c_LinearActuatorSetpoint);
 		Shuffleboard.getTab("Competition").getLayout("LSCommand").add("Command Setpoint", c_LeadscrewSetpoint);
     }
 
@@ -79,6 +89,12 @@ public class RobotContainer {
 		POVButton operatorDPadDownButton = new POVButton(i_driverXbox, DumpBackward); // D-Pad Down
 		operatorDPadDownButton.whileHeld(c_DumpBackward);
         */
+
+		JoystickButton operatorXButton = new JoystickButton(i_operatorXbox, RaiseLinearActuator);
+		operatorXButton.whileTrue(c_RaiseLinearActuator);
+
+		JoystickButton operatorBButton = new JoystickButton(i_operatorXbox, LowerLinearActuator);
+		operatorBButton.whileTrue(c_LowerLinearActuator);
 
 		POVButton operatorDPadRightButton = new POVButton(i_operatorXbox, OperatorDrive); // D-Pad Right
 		operatorDPadRightButton.whileTrue(c_OperatorDrive);
@@ -111,7 +127,15 @@ public class RobotContainer {
 		return new WaitCommand(0.2).andThen(c_InitLeadscrewDown).andThen(new WaitCommand(1)).andThen(c_InitLeadscrewUp);
 	}
 
+	public Command getInitializeLinearCommand(){
+		return new WaitCommand(0.2).andThen(c_InitLinearActuator);
+	}
+
     public boolean isLeadscrewInitialized(){
 		return s_DiggingLeadscrew.isLeadscrewInitialized();
+	}
+
+	public boolean isLinearActuatorInitialized(){
+		return s_DiggingLinearActuator.isLinearActuatorInitialized();
 	}
 }

@@ -1,8 +1,10 @@
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxLimitSwitch;
+package frc.robot.subsystems.Digging;
+
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMax.ExternalFollower;
+
+import com.revrobotics.SparkMaxAnalogSensor;
+
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import frc.robot.custom.LunaMathUtils;
@@ -14,7 +16,6 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.GlobalConstants.MechanismPosition;
 import frc.robot.Constants.GlobalConstants.RobotSide;
 import frc.robot.custom.LunaSparkMax;
 import static frc.robot.Constants.GlobalConstants.*;
@@ -30,8 +31,8 @@ public class DiggingLinearActuator extends SubsystemBase {
     private final LunaSparkMax m_linear1;
     private final LunaSparkMax m_linear2;
 
-    private final RelativeEncoder e_linear1;
-    private final RelativeEncoder e_linear2;
+    private final SparkMaxAnalogSensor a_linear1;
+    private final SparkMaxAnalogSensor a_linear2;
     private final SparkMaxPIDController p_linear;
 
     // NetworkTable Instantiation
@@ -54,12 +55,12 @@ public class DiggingLinearActuator extends SubsystemBase {
         m_linear1 = new LunaSparkMax(LINEAR_1_CAN_ID, MotorType.kBrushed);
         m_linear2 = new LunaSparkMax(LINEAR_2_CAN_ID, MotorType.kBrushed);
 
-        e_linear1 = m_linear1.getEncoder();
-        e_linear2 = m_linear2.getEncoder();
+        a_linear1 = m_linear1.getAnalogSensor();
+        a_linear2 = m_linear2.getAnalogSensor();
         p_linear = m_linear1.getPIDController();
 
-        e_linear1.setInverted(LINEAR_INVERT);
-        e_linear2.setInverted(LINEAR_INVERT);
+        a_linear1.setInverted(LINEAR_INVERT);
+        a_linear2.setInverted(LINEAR_INVERT);
 
         m_linear1.burnFlash();
         m_linear2.burnFlash();
@@ -102,8 +103,8 @@ public class DiggingLinearActuator extends SubsystemBase {
     }
 
     private void linearUp() {
-        if (e_linear1.getPosition() >= (LINEAR_MAX_TRAVEL - LINEAR_DEADBAND)
-				|| e_linear2.getPosition() >= (LINEAR_MAX_TRAVEL - LINEAR_DEADBAND)
+        if (a_linear1.getPosition() >= (LINEAR_MAX_TRAVEL - LINEAR_DEADBAND)
+				|| a_linear2.getPosition() >= (LINEAR_MAX_TRAVEL - LINEAR_DEADBAND)
 				|| linearState == LinearActuatorState.Raised)
 			return;
         linearState = LinearActuatorState.TravelingUp;
@@ -112,7 +113,7 @@ public class DiggingLinearActuator extends SubsystemBase {
     }
 
     private void linearDown() {
-		if (e_linear1.getPosition() <= LINEAR_MIN_TRAVEL || e_linear2.getPosition() <= LINEAR_MIN_TRAVEL
+		if (a_linear1.getPosition() <= LINEAR_MIN_TRAVEL || a_linear2.getPosition() <= LINEAR_MIN_TRAVEL
 				|| linearState == LinearActuatorState.Lowered)
 			return;
 		linearState = LinearActuatorState.TravelingDown;
@@ -127,6 +128,15 @@ public class DiggingLinearActuator extends SubsystemBase {
 
 	public void linearActuatorInitStart() {
 		linearDown();
+	}
+
+	public double linearActuatorGetRawPotentiometer(RobotSide side) {
+		if (side == RobotSide.Left)
+			return a_linear1.getVoltage();
+		else if (side == RobotSide.Right)
+			return a_linear2.getVoltage()+LINEAR_2_ADJUSTMENT;
+		else
+			return 0.0;
 	}
 
     public void linearActuatorInitEnd() {
@@ -160,8 +170,8 @@ public class DiggingLinearActuator extends SubsystemBase {
 	}
 
     public double getLinearPosition(RobotSide side) {
-        if (side == RobotSide.Left) return e_linear1.getPosition();
-        else return e_linear2.getPosition() + LINEAR_2_ADJUSTMENT;
+        if (side == RobotSide.Left) return a_linear1.getPosition();
+        else return a_linear2.getPosition() + LINEAR_2_ADJUSTMENT;
     }
 
     public void commandDown(){
@@ -215,18 +225,18 @@ public class DiggingLinearActuator extends SubsystemBase {
 			}
 			pidConstants.put(pidConstant, newVal);
 		}
-		pidNTEntries.get("p_linear1-position").setDouble(e_linear1.getPosition());
-        pidNTEntries.get("p_linear2-position").setDouble(e_linear2.getPosition());
+		pidNTEntries.get("p_linear1-position").setDouble(a_linear1.getPosition());
+        pidNTEntries.get("p_linear2-position").setDouble(a_linear2.getPosition());
 	}
 
     private void reportSensors() {
 		shuffleboardEntries.get("linear-init").setBoolean(linearInitialized);
 		shuffleboardEntries.get("linear-state").setString(linearState.toString());
-        shuffleboardEntries.get("position-1").setDouble(LunaMathUtils.roundToPlace(e_linear1.getPosition(), 3));
-        shuffleboardEntries.get("position-2").setDouble(LunaMathUtils.roundToPlace(e_linear2.getPosition(), 3));
+        shuffleboardEntries.get("position-1").setDouble(LunaMathUtils.roundToPlace(a_linear1.getPosition(), 3));
+        shuffleboardEntries.get("position-2").setDouble(LunaMathUtils.roundToPlace(a_linear2.getPosition(), 3));
 		networkTable.getEntry("linearInitialized").setBoolean(linearInitialized);
-        networkTable.getEntry("linear1Position").setDouble(e_linear1.getPosition());
-        networkTable.getEntry("linear2Position").setDouble(e_linear2.getPosition());
+        networkTable.getEntry("linear1Position").setDouble(a_linear1.getPosition());
+        networkTable.getEntry("linear2Position").setDouble(a_linear2.getPosition());
 		networkTable.getEntry("linearState").setString(linearState.toString());
 	}
 
@@ -243,13 +253,13 @@ public class DiggingLinearActuator extends SubsystemBase {
 
     private void checkLimits() {
 		if (linearState != LinearActuatorState.Raised && linearState != LinearActuatorState.TravelingDown
-				&& e_linear1.getPosition() >= LINEAR_MAX_TRAVEL - LINEAR_DEADBAND
-				&& e_linear2.getPosition() >= LINEAR_MAX_TRAVEL - LINEAR_DEADBAND) {
+				&& a_linear1.getPosition() >= LINEAR_MAX_TRAVEL - LINEAR_DEADBAND
+				&& a_linear2.getPosition() >= LINEAR_MAX_TRAVEL - LINEAR_DEADBAND) {
 			linearState = LinearActuatorState.Raised;
 			linearStop();
 		}
 		if (linearState != LinearActuatorState.Lowered && linearState != LinearActuatorState.TravelingUp
-				&& e_linear1.getPosition() <= LINEAR_MIN_TRAVEL && e_linear2.getPosition() <= LINEAR_MIN_TRAVEL) {
+				&& a_linear1.getPosition() <= LINEAR_MIN_TRAVEL && a_linear2.getPosition() <= LINEAR_MIN_TRAVEL) {
 			linearState = LinearActuatorState.Lowered;
 			linearStop();
 		}

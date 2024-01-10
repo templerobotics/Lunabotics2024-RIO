@@ -5,7 +5,9 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
 import com.revrobotics.SparkMaxPIDController;
+
 import static frc.robot.Constants.SparkMaxConsants.*;
+import com.revrobotics.SparkMaxAnalogSensor;
 
 
 public class LunaSparkMax extends CANSparkMax {
@@ -13,12 +15,13 @@ public class LunaSparkMax extends CANSparkMax {
     private final Presets preset;
     private final int can_id;
     private RelativeEncoder encoder;
+    private SparkMaxAnalogSensor analogSensor;
     private SparkMaxPIDController pid;
 
     private static final int[] PRIMES = new int[]{0, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109};
 
     public enum Presets {
-        kNone, kDrivebase, kDiggingBelt, kDiggingLeadscrew;
+        kNone, kDrivebase, kDiggingBelt, kDiggingLeadscrew, kDiggingActuator;
     }
 
     /**
@@ -91,7 +94,14 @@ public class LunaSparkMax extends CANSparkMax {
         this.encoder = encoder;
         return encoder;
     }
+
+    public SparkMaxAnalogSensor getAnalogSensor() {
+        if (this.analogSensor != null) return this.analogSensor;
+        SparkMaxAnalogSensor analogSensor = super.getAnalog(SparkMaxAnalogSensor.Mode.kAbsolute);
     
+        this.analogSensor = analogSensor;
+        return analogSensor;
+    }
     
     /**
      * @return An object for interfacing with SparkMax integrated PID Controller

@@ -4,7 +4,7 @@ import frc.robot.subsystems.Digging.DiggingLinearActuator.LinearActuatorState;
 import frc.robot.subsystems.Digging.DiggingLinearActuator;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class LowerLinearActuator extends CommandBase {\
+public class LowerLinearActuator extends CommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 	private final DiggingLinearActuator m_subsystem;
 
