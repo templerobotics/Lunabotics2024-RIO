@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.custom.LunaMathUtils;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -22,6 +21,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command c_XboxDrive;
+  private Command c_OperatorDrive;
+	private Command c_InitializeLeadscrew;
+  private Command c_InitializeLinearActuator;
   
   private RobotContainer m_robotContainer;
 
@@ -40,6 +42,9 @@ public class Robot extends TimedRobot {
     // gearbox is constructed, you might have to invert the left side instead.
     m_robotContainer = new RobotContainer();
     c_XboxDrive = m_robotContainer.getXboxDrive();
+    c_OperatorDrive = m_robotContainer.getOperatorDrive();
+    c_InitializeLeadscrew = m_robotContainer.getInitializeLeadscrewCommand();
+    
     //c_XboxDrive = m_robotContainer.getXboxDrive();
     //nt_FPGATimestamp = Shuffleboard.getTab("Competition").add("FPGA Time", LunaMathUtils.roundToPlace(Timer.getFPGATimestamp(), 2)).withSize(1, 1).withPosition(0, 0).getEntry();
   
@@ -85,6 +90,8 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
     c_XboxDrive.schedule();
+    c_OperatorDrive.schedule();
+		if (!m_robotContainer.isLeadscrewInitialized()) c_InitializeLeadscrew.schedule();
   }
 
   /** This function is called periodically during teleoperated mode. */
@@ -100,6 +107,7 @@ public class Robot extends TimedRobot {
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
     LiveWindow.setEnabled(false);
+    if (!m_robotContainer.isLeadscrewInitialized()) c_InitializeLeadscrew.schedule();
   }
 
   /** This function is called periodically during test mode. */
