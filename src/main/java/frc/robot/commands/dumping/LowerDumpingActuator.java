@@ -5,16 +5,16 @@ import frc.robot.subsystems.Dumping.LinearActuatorState;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class RaiseDumpingActuator extends CommandBase {
+public class LowerDumpingActuator extends CommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 	private final Dumping m_subsystem;
 
     /**
-	 * Creates a new RaiseLinearActuator.
+	 * Creates a new LowerLinearActuator.
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public RaiseDumpingActuator(Dumping subsystem) {
+	public LowerDumpingActuator(Dumping subsystem) {
 		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
@@ -23,13 +23,13 @@ public class RaiseDumpingActuator extends CommandBase {
     // Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		m_subsystem.linearActuator(LinearActuatorState.Raised);
+		m_subsystem.linearActuator(LinearActuatorState.Lowered);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		//m_subsystem.linearActuator(LinearActuatorState.Raised);
+		//m_subsystem.linearActuator(LinearActuatorState.Lowered);
 	}
 
 	// Called once the command ends or is interrupted.
@@ -40,6 +40,6 @@ public class RaiseDumpingActuator extends CommandBase {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return m_subsystem.linearActuatorState() == LinearActuatorState.Raised;
+		return m_subsystem.linearActuatorState() == LinearActuatorState.Lowered;
 	}
 }

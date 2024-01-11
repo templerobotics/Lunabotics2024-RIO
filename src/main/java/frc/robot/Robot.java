@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
     c_XboxDrive = m_robotContainer.getXboxDrive();
     c_OperatorDrive = m_robotContainer.getOperatorDrive();
     c_InitializeLeadscrew = m_robotContainer.getInitializeLeadscrewCommand();
-    
+    c_InitializeLinearActuator = m_robotContainer.getInitializeLinearCommand();
     //c_XboxDrive = m_robotContainer.getXboxDrive();
     //nt_FPGATimestamp = Shuffleboard.getTab("Competition").add("FPGA Time", LunaMathUtils.roundToPlace(Timer.getFPGATimestamp(), 2)).withSize(1, 1).withPosition(0, 0).getEntry();
   
@@ -92,6 +92,7 @@ public class Robot extends TimedRobot {
     c_XboxDrive.schedule();
     c_OperatorDrive.schedule();
 		if (!m_robotContainer.isLeadscrewInitialized()) c_InitializeLeadscrew.schedule();
+    if (!m_robotContainer.isLinearActuatorInitialized()) c_InitializeLinearActuator.schedule();
   }
 
   /** This function is called periodically during teleoperated mode. */

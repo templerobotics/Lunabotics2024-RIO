@@ -23,7 +23,7 @@ import frc.robot.subsystems.Digging.DiggingLeadscrew;
 import static frc.robot.ButtonMapping.*;
 import frc.robot.commands.init.leadscrew.InitLeadscrewDown;
 import frc.robot.commands.init.leadscrew.InitLeadscrewUp;
-
+import frc.robot.commands.dumping.LowerDumpingActuator;
 // Dumping
 import frc.robot.commands.dumping.RaiseDumpingActuator;
 import frc.robot.subsystems.Dumping;
@@ -57,6 +57,7 @@ public class RobotContainer {
 
 	// Dumping
 	private final RaiseDumpingActuator c_RaiseDumpingActuator = new RaiseDumpingActuator(s_DumpingLinearActuator);
+	private final LowerDumpingActuator c_LowerDumpingActuator = new LowerDumpingActuator(s_DumpingLinearActuator);
 	private final InitLinearActuator c_InitLinearActuator = new InitLinearActuator(s_DumpingLinearActuator);
 	
 
@@ -70,6 +71,9 @@ public class RobotContainer {
 
 		POVButton operatorDPadUpButton = new POVButton(i_driverXbox, DumpUp); // D-Pad Up
 		operatorDPadUpButton.onTrue(c_RaiseDumpingActuator);
+
+		POVButton operatorDPadDownButton = new POVButton(i_driverXbox, DumpDown); // D-Pad Up
+		operatorDPadDownButton.onTrue(c_LowerDumpingActuator);
 
         /*
 		JoystickButton operatorXButton = new JoystickButton(i_operatorXbox, RaiseLinearActuator);
@@ -134,7 +138,6 @@ public class RobotContainer {
     public boolean isLeadscrewInitialized(){
 		return s_DiggingLeadscrew.isLeadscrewInitialized();
 	}
-
     
 	public boolean isLinearActuatorInitialized(){
 		return s_DumpingLinearActuator.isLinearActuatorInitialized();

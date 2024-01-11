@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GlobalConstants.RobotSide;
 import frc.robot.custom.LunaSparkMax;
 import static frc.robot.Constants.GlobalConstants.*;
+import frc.robot.custom.LunaMathUtils;
 
 import java.util.HashMap;
 
@@ -85,23 +86,37 @@ public class Dumping extends SubsystemBase {
     public void periodic() {
         // This will be called once per scheduler run
         reportSensors();
+        checkLimits();
         checkPIDGains();
     }
 
     private void linearUp() {
+        /*
         if (a_linear1.getPosition() >= (LINEAR_MAX_TRAVEL - LINEAR_DEADBAND)
-				|| linearState == LinearActuatorState.Raised)
-			return;
+				|| linearState == LinearActuatorState.Raised) {
+                    m_linear1.set(-1);
+                    return;
+                }
+			        
         linearState = LinearActuatorState.TravelingUp;
-        m_linear1.set(1);
-    }
+        m_linear1.set(-1);*/
+
+        double test = LunaMathUtils.scaleBetween(a_linear1.getPosition(), 0, 5, 0, 1);
+        System.out.println(test);
+        if (test >= 0.6 || linearState == LinearActuatorState.Lowered)
+            return;
+        linearState = LinearActuatorState.TravelingDown;
+        m_linear1.set(-1);
+    }       
 
     private void linearDown() {
+        double test = LunaMathUtils.scaleBetween(a_linear1.getPosition(), 0, 5, 0, 1);
+        System.out.println(test);
 		if (a_linear1.getPosition() <= LINEAR_MIN_TRAVEL
 				|| linearState == LinearActuatorState.Lowered)
 			return;
 		linearState = LinearActuatorState.TravelingDown;
-        m_linear1.set(-1);
+        m_linear1.set(1);
     }
 
     private void linearStop() {
@@ -130,7 +145,6 @@ public class Dumping extends SubsystemBase {
 
     public void linearActuator(LinearActuatorState state) {
 		if (state == LinearActuatorState.Raised) {
-            System.out.println(state);
 			linearUp();
 		} else if (state == LinearActuatorState.Lowered) {
 			linearDown();
