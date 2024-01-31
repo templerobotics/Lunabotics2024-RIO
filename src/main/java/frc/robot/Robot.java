@@ -41,6 +41,7 @@ public class Robot extends TimedRobot {
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     m_robotContainer = new RobotContainer();
+
     c_XboxDrive = m_robotContainer.getXboxDrive();
     c_OperatorDrive = m_robotContainer.getOperatorDrive();
     c_InitializeLeadscrew = m_robotContainer.getInitializeLeadscrewCommand();
@@ -49,6 +50,7 @@ public class Robot extends TimedRobot {
     //nt_FPGATimestamp = Shuffleboard.getTab("Competition").add("FPGA Time", LunaMathUtils.roundToPlace(Timer.getFPGATimestamp(), 2)).withSize(1, 1).withPosition(0, 0).getEntry();
   
     nt_FPGATimestamp = Shuffleboard.getTab("Competition").add("FPGA Time", 0).withSize(1, 1).withPosition(0, 0).getEntry();
+    
   }
 
   @Override

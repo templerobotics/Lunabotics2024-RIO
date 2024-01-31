@@ -4,6 +4,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 
 import com.revrobotics.SparkMaxAnalogSensor;
+import com.revrobotics.SparkMaxRelativeEncoder;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -12,14 +13,14 @@ import static frc.robot.Constants.DiggingConstants.*;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.math.MathUtil;
+
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.GlobalConstants.RobotSide;
 import frc.robot.custom.LunaSparkMax;
 import static frc.robot.Constants.GlobalConstants.*;
-import frc.robot.custom.LunaMathUtils;
 
 import java.util.HashMap;
 
@@ -31,6 +32,7 @@ public class Dumping extends SubsystemBase {
     private final LunaSparkMax m_linear1;
     private final SparkMaxAnalogSensor a_linear1;
     private final SparkMaxPIDController p_linear;
+    private RelativeEncoder m_encoder;
 
     // NetworkTable Instantiation
     private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
@@ -50,6 +52,7 @@ public class Dumping extends SubsystemBase {
     public Dumping() {
         m_linear1 = new LunaSparkMax(LINEAR_1_CAN_ID, MotorType.kBrushed);
         a_linear1 = m_linear1.getAnalogSensor();
+        m_encoder = m_linear1.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
         p_linear = m_linear1.getPIDController();
 
         m_linear1.burnFlash();
@@ -102,16 +105,18 @@ public class Dumping extends SubsystemBase {
         m_linear1.set(-1);*/
 
         double test = LunaMathUtils.scaleBetween(a_linear1.getPosition(), 0, 5, 0, 1);
-        System.out.println(test);
-        if (test >= 0.6 || linearState == LinearActuatorState.Lowered)
+        System.out.println(m_encoder.getPosition());
+        if (m_encoder.getPosition() >= 0.6 || linearState == LinearActuatorState.Lowered) {
+            m_linear1.stopMotor();
             return;
+        }
         linearState = LinearActuatorState.TravelingDown;
         m_linear1.set(-1);
     }       
 
     private void linearDown() {
         double test = LunaMathUtils.scaleBetween(a_linear1.getPosition(), 0, 5, 0, 1);
-        System.out.println(test);
+        //System.out.println(test);
 		if (a_linear1.getPosition() <= LINEAR_MIN_TRAVEL
 				|| linearState == LinearActuatorState.Lowered)
 			return;

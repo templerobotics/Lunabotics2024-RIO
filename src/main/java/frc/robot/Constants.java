@@ -89,7 +89,7 @@ public class Constants {
         //
         public final static boolean APPLY_VELOCITY_SCALAR = true;
         public final static double DRIVE_WHEEL_RADIUS = 0.01; // meters -- Subject to change
-        public final static double DRIVE_GEARBOX_RATIO = 100; // Subject to change
+        public final static double DRIVE_GEARBOX_RATIO = 125; // Subject to change
 
         // Invert Direction
         //
