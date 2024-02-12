@@ -228,7 +228,7 @@ public class Dumping extends SubsystemBase {
                         p_linear.setFF(newVal);
                         break;
                     case "setpoint":
-                        p_linear.setReference(newVal, ControlType.kVelocity);
+                        p_linear.setReference(newVal, ControlType.kPosition);
                         break;
                     default:
                         break;
