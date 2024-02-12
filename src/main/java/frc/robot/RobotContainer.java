@@ -20,6 +20,7 @@ import frc.robot.commands.digging.RetractLeadscrew;
 import frc.robot.commands.digging.DigForward;
 import frc.robot.commands.digging.DigReverse;
 import frc.robot.subsystems.Digging.DiggingLeadscrew;
+import frc.robot.subsystems.BMS;
 import static frc.robot.ButtonMapping.*;
 import frc.robot.commands.init.leadscrew.InitLeadscrewDown;
 import frc.robot.commands.init.leadscrew.InitLeadscrewUp;
@@ -36,6 +37,7 @@ public class RobotContainer {
     private final DiggingLeadscrew s_DiggingLeadscrew = new DiggingLeadscrew();
     private final DiggingBelt s_DiggingBelt = new DiggingBelt();
 	private final Dumping s_DumpingLinearActuator = new Dumping();
+	// private final BMS s_BMS = new BMS();
 
 
     // Input Devices

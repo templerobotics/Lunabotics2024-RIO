@@ -129,7 +129,7 @@ public class Constants {
 		public final static double LINEAR_MIN_TRAVEL = .01;
 		public final static double LINEAR_MAX_TRAVEL = 0.55; //0.55
 		public final static double LINEAR_2_ADJUSTMENT = -0.02;
-        public final static double LINEAR_kP = 0.0000000015;
+        public final static double LINEAR_kP = 0.1;
 		public final static double LINEAR_kI = 0.000002;
 		public final static double LINEAR_kD = 0.000005;
 		public final static double LINEAR_kIZ = 20;

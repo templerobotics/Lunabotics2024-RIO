@@ -12,6 +12,7 @@ import frc.robot.custom.LunaMathUtils;
 import static frc.robot.Constants.DiggingConstants.*;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.MathUtil;
 
 import com.revrobotics.RelativeEncoder;
@@ -30,9 +31,8 @@ public class Dumping extends SubsystemBase {
 	}
 
     private final LunaSparkMax m_linear1;
-    private final SparkMaxAnalogSensor a_linear1;
+    private final SparkMaxAnalogSensor a_linear;
     private final SparkMaxPIDController p_linear;
-    private RelativeEncoder m_encoder;
 
     // NetworkTable Instantiation
     private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
@@ -51,8 +51,7 @@ public class Dumping extends SubsystemBase {
 
     public Dumping() {
         m_linear1 = new LunaSparkMax(LINEAR_1_CAN_ID, MotorType.kBrushed);
-        a_linear1 = m_linear1.getAnalogSensor();
-        m_encoder = m_linear1.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
+        a_linear = m_linear1.getAnalogSensor();
         p_linear = m_linear1.getPIDController();
 
         m_linear1.burnFlash();
@@ -88,14 +87,33 @@ public class Dumping extends SubsystemBase {
     @Override
     public void periodic() {
         // This will be called once per scheduler run
-        reportSensors();
+        reportSensors(); 
         checkLimits();
-        checkPIDGains();
+        // checkPIDGains();
+
+        double linearP = SmartDashboard.getNumber("linearP", 0.0);
+        double linearI = SmartDashboard.getNumber("linearI", 0.0);
+        double linearD = SmartDashboard.getNumber("linearD", 0.0);
+        double linearFF = SmartDashboard.getNumber("linearFF", 0.0);
+        double setPt = SmartDashboard.getNumber("Target Position", 0.0);
+
+        if (linearP != p_linear.getP()) p_linear.setP(linearP);
+        if (linearP != p_linear.getI()) p_linear.setI(linearI);
+        if (linearP != p_linear.getD()) p_linear.setD(linearD);
+        if (linearP != p_linear.getFF()) p_linear.setFF(linearFF);
+        SmartDashboard.putNumber("linearP", p_linear.getP());
+        SmartDashboard.putNumber("linearI", p_linear.getI());
+        SmartDashboard.putNumber("linearD", p_linear.getD());
+        SmartDashboard.putNumber("linearFF", p_linear.getFF());
+        SmartDashboard.putNumber("Target Position", setPt);
+        SmartDashboard.putNumber("Current Position", a_linear.getPosition());
+
+        // System.out.println(p_linear.getP());
     }
 
     private void linearUp() {
         /*
-        if (a_linear1.getPosition() >= (LINEAR_MAX_TRAVEL - LINEAR_DEADBAND)
+        if (a_linear.getPosition() >= (LINEAR_MAX_TRAVEL - LINEAR_DEADBAND)
 				|| linearState == LinearActuatorState.Raised) {
                     m_linear1.set(-1);
                     return;
@@ -104,9 +122,10 @@ public class Dumping extends SubsystemBase {
         linearState = LinearActuatorState.TravelingUp;
         m_linear1.set(-1);*/
 
-        double test = LunaMathUtils.scaleBetween(a_linear1.getPosition(), 0, 5, 0, 1);
-        System.out.println(m_encoder.getPosition());
-        if (m_encoder.getPosition() >= 0.6 || linearState == LinearActuatorState.Lowered) {
+        double test = LunaMathUtils.scaleBetween(a_linear.getPosition(), 0.48, 3.3, 0, 1);
+        //System.out.println(test);
+        //System.out.println(a_linear.getPosition());
+        if (a_linear.getPosition() >= 1 || linearState == LinearActuatorState.Lowered) {
             m_linear1.stopMotor();
             return;
         }
@@ -115,9 +134,10 @@ public class Dumping extends SubsystemBase {
     }       
 
     private void linearDown() {
-        double test = LunaMathUtils.scaleBetween(a_linear1.getPosition(), 0, 5, 0, 1);
+        double test = LunaMathUtils.scaleBetween(a_linear.getPosition(), 0.48, 3.3, 0, 1);
         //System.out.println(test);
-		if (a_linear1.getPosition() <= LINEAR_MIN_TRAVEL
+        //System.out.println(a_linear.getPosition());
+		if (a_linear.getPosition() <= LINEAR_MIN_TRAVEL
 				|| linearState == LinearActuatorState.Lowered)
 			return;
 		linearState = LinearActuatorState.TravelingDown;
@@ -133,7 +153,7 @@ public class Dumping extends SubsystemBase {
     }
 
     public double linearActuatorGetRawPotentiometer() {
-        return a_linear1.getVoltage();
+        return a_linear.getVoltage();
     }
 
     public void linearActuatorInitEnd() {
@@ -167,7 +187,7 @@ public class Dumping extends SubsystemBase {
 	}
 
     public double getLinearPosition() {
-        return a_linear1.getPosition();
+        return a_linear.getPosition();
     }
 
     public void commandDown(){
@@ -215,15 +235,15 @@ public class Dumping extends SubsystemBase {
                 }
 			pidConstants.put(pidConstant, newVal);
 		}
-		pidNTEntries.get("dumping-velocity").setDouble(a_linear1.getPosition());
+		pidNTEntries.get("dumping-velocity").setDouble(a_linear.getPosition());
 	}
 
     private void reportSensors() {
 		shuffleboardEntries.get("dumping-init").setBoolean(linearInitialized);
 		shuffleboardEntries.get("dumping-state").setString(linearState.toString());
-        shuffleboardEntries.get("dumping-position").setDouble(LunaMathUtils.roundToPlace(a_linear1.getPosition(), 3));
+        shuffleboardEntries.get("dumping-position").setDouble(LunaMathUtils.roundToPlace(a_linear.getPosition(), 3));
 		networkTable.getEntry("linearInitialized").setBoolean(linearInitialized);
-        networkTable.getEntry("DumpingPosition").setDouble(a_linear1.getPosition());
+        networkTable.getEntry("DumpingPosition").setDouble(a_linear.getPosition());
 		networkTable.getEntry("linearState").setString(linearState.toString());
 	}
 
@@ -239,12 +259,12 @@ public class Dumping extends SubsystemBase {
 
     private void checkLimits() {
 		if (linearState != LinearActuatorState.Raised && linearState != LinearActuatorState.TravelingDown
-				&& a_linear1.getPosition() >= LINEAR_MAX_TRAVEL - LINEAR_DEADBAND) {
+				&& a_linear.getPosition() >= LINEAR_MAX_TRAVEL - LINEAR_DEADBAND) {
 			linearState = LinearActuatorState.Raised;
 			linearStop();
 		}
 		if (linearState != LinearActuatorState.Lowered && linearState != LinearActuatorState.TravelingUp
-				&& a_linear1.getPosition() <= LINEAR_MIN_TRAVEL) {
+				&& a_linear.getPosition() <= LINEAR_MIN_TRAVEL) {
 			linearState = LinearActuatorState.Lowered;
 			linearStop();
 		}
