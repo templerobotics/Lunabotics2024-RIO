@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import frc.robot.custom.LunaMathUtils;
 import static frc.robot.Constants.DiggingConstants.*;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.MathUtil;
@@ -188,9 +189,7 @@ public class DiggingActuator extends SubsystemBase{
     }
 
      /*
-        Dumping conditions are <= 
-        Opposite of ">=" is "<"
-        Oppsite of "<=" = ">"
+        Dumping conditions are "<=" Oppsite of "<=" = ">"
     */
     private void linearDown(){
         assert(a_linear.getPosition()>LINEAR_MIN_TRAVEL && a_linear2.getPosition()>LINEAR_MIN_TRAVEL && linearState_dig != LinearActuatorState.Lowered);
@@ -212,6 +211,11 @@ public class DiggingActuator extends SubsystemBase{
         return linearState_dig;
     }
 
+    public double getLinearPosition(RobotSide side){
+		if (side == RobotSide.Left) return ((MotorController) a_linear).get();
+		else return ((MotorController) a_linear2).get()+LINEAR_2_ADJUSTMENT;
+	}
+/* 
     public boolean isLinearActuatorInitializedLEFT() {
         return linearInitialized;
     }
@@ -226,10 +230,17 @@ public class DiggingActuator extends SubsystemBase{
     public double getLinearActuatorPositionRight(){
         return a_linear2.getPosition();
     }
+*/
+    public double getLinearActuatorPosition(SparkMaxAnalogSensor sparkmax_actuator){
+        return sparkmax_actuator.getPosition();
+    }
 
-    public double getlinearActuatorGetRawPotentiometer(RobotSide side) {
-        if(side == RobotSide.Left){return a_linear.getVoltage();}
-        return a_linear2.getVoltage();
+    public boolean isLinearActuatorInitialized(boolean linear_initialized){
+        return linear_initialized;
+    }
+
+    public double getlinearActuatorGetRawPotentiometer(SparkMaxAnalogSensor sparkmax_actuator) {   
+        return  sparkmax_actuator.getVoltage();
     }
 
     private void checkLinearActuatorLimits(){
