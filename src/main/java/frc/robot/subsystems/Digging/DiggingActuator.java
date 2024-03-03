@@ -113,7 +113,7 @@ public class DiggingActuator extends SubsystemBase{
 		shuffleboardEntries.get("digging-state").setString(linearState_dig.toString());
         shuffleboardEntries.get("digging-position-LEFT").setDouble(LunaMathUtils.roundToPlace(a_linear.getPosition(), 3));
         shuffleboardEntries.get("digging-position-RIGHT").setDouble(LunaMathUtils.roundToPlace(a_linear2.getPosition(), 3));
-        //Network Tables not yet defined. These value references are null 
+        //Network Tables subscribers waiting for publishers
 		networkTable.getEntry("diggit-init-LEFT").setBoolean(linearInitialized);
         networkTable.getEntry("digging-init-RIGHT").setBoolean(linearInitialized_2);
         networkTable.getEntry("digging-position-LEFT").setDouble(a_linear.getPosition());
@@ -122,14 +122,15 @@ public class DiggingActuator extends SubsystemBase{
 	}
 
     private void reportInitialPID(){
-        pidNTEntries.put("digging-kP", Shuffleboard.getTab("Digging PID").add("Digging P Gain", BELT_kP).getEntry());
-		pidNTEntries.put("digging-kI", Shuffleboard.getTab("Digging PID").add("Digging I Gain", BELT_kI).getEntry());
-		pidNTEntries.put("digging-kD", Shuffleboard.getTab("Digging PID").add("Digging D Gain", BELT_kD).getEntry());
-		pidNTEntries.put("digging-kIZ", Shuffleboard.getTab("Digging PID").add("Digging I Zone", BELT_kIZ).getEntry());
-		pidNTEntries.put("digging-kFF", Shuffleboard.getTab("Digging PID").add("Digging FF", BELT_kFF).getEntry());
+        pidNTEntries.put("digging-kP", Shuffleboard.getTab("Digging PID").add("Digging P Gain", LINEAR_kP).getEntry());
+		pidNTEntries.put("digging-kI", Shuffleboard.getTab("Digging PID").add("Digging I Gain", LINEAR_kI).getEntry());
+		pidNTEntries.put("digging-kD", Shuffleboard.getTab("Digging PID").add("Digging D Gain", LINEAR_kD).getEntry());
+		pidNTEntries.put("digging-kIZ", Shuffleboard.getTab("Digging PID").add("Digging I Zone", LINEAR_kIZ).getEntry());
+		pidNTEntries.put("digging-kFF", Shuffleboard.getTab("Digging PID").add("Digging FF", LINEAR_kFF).getEntry());
 		pidNTEntries.put("digging-setpoint", Shuffleboard.getTab("Digging PID").add("Digging Setpoint", 0).getEntry());
-		pidNTEntries.put("digging-velocity-LEFT", Shuffleboard.getTab("Digging PID").add("Digging Velocity-LEFT", 0).getEntry());
-        pidNTEntries.put("digging-velocity-RIGHT", Shuffleboard.getTab("Digging PID").add("Digging Velocity-RIGHT", 0).getEntry());
+        //Method below overwrites default velocity value of 0 --> Should be fine(Pre-Testing Idea)
+		pidNTEntries.put("digging-position-LEFT", Shuffleboard.getTab("Digging PID").add("Digging Position-LEFT", 0).getEntry());
+        pidNTEntries.put("digging-position-RIGHT", Shuffleboard.getTab("Digging PID").add("Digging Position-RIGHT", 0).getEntry());
     }
 
     private void checkPIDGains() {
@@ -169,9 +170,8 @@ public class DiggingActuator extends SubsystemBase{
                 }
 			pidConstants.put(pidConstant, newVal);
 		}
-		pidNTEntries.get("digging-velocity-LEFT").setDouble(a_linear.getPosition());
-        pidNTEntries.get("digging-velocity-RIGHT").setDouble(a_linear2.getPosition());
-
+		pidNTEntries.get("Digging Position-LEFT").setDouble(a_linear.getPosition());
+        pidNTEntries.get("Digging Position-RIGHT").setDouble(a_linear2.getPosition());
 	}
 
     public double getDashboardCommandedPosition() {
