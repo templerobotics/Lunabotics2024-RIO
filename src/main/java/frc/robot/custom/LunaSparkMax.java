@@ -59,9 +59,11 @@ public class LunaSparkMax extends CANSparkMax {
         this.setIdleMode(DEFAULT_IDLE_MODE);
         this.setSmartCurrentLimit(DEFAULT_SMART_CURRENT_LIMIT);
         this.setSecondaryCurrentLimit(DEFAULT_SECONDARY_CURRENT_LIMIT);
+        /*
         this.setPeriodicFramePeriod(PeriodicFrame.kStatus0, PRIMES[can_id]);
 		this.setPeriodicFramePeriod(PeriodicFrame.kStatus1, PRIMES[can_id+10]);
 		this.setPeriodicFramePeriod(PeriodicFrame.kStatus2, PRIMES[can_id+10]);
+        */
         switch(this.preset) {
             case kDrivebase:
                 this.setSmartCurrentLimit(DrivebaseConstants.CURRENT_LIMIT_STALL, DrivebaseConstants.CURRENT_LIMIT_FREE);

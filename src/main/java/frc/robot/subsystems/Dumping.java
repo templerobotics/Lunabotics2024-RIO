@@ -54,7 +54,7 @@ public class Dumping extends SubsystemBase {
         a_linear = m_linear1.getAnalogSensor();
         p_linear = m_linear1.getPIDController();
 
-        m_linear1.g();
+        m_linear1.burnFlash();
 
         networkTable = ntInstance.getTable("DumpingSubsystem");
 

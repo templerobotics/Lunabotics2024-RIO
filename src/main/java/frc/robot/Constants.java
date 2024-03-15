@@ -42,10 +42,10 @@ public class Constants {
     public final static class DrivebaseConstants {
 
         // Motor Controllers
-        public final static int LEFT_FRONT_CAN_ID = 2;
-        public final static int LEFT_REAR_CAN_ID = 3;
-        public final static int RIGHT_FRONT_CAN_ID = 4;
-        public final static int RIGHT_REAR_CAN_ID = 5;
+        public final static int LEFT_FRONT_CAN_ID = 9;
+        public final static int LEFT_REAR_CAN_ID = 6;
+        public final static int RIGHT_FRONT_CAN_ID = 8;
+        public final static int RIGHT_REAR_CAN_ID = 7;
 
         // PDP
         public final static int LEFT_FRONT_PDP_ID = 0;
@@ -99,9 +99,9 @@ public class Constants {
 
     public final static class DiggingConstants {
         // Belt
-		public final static int BELT_1_CAN_ID = 8;
+		public final static int BELT_1_CAN_ID = 3;
 		public final static int BELT_1_PDP_ID = 0;
-		public final static int BELT_2_CAN_ID = 9;
+		public final static int BELT_2_CAN_ID = 11;
 		public final static int BELT_2_PDP_ID = 0;
 
 		public final static boolean BELT_INVERT = true;
@@ -122,8 +122,8 @@ public class Constants {
 		public final static int BELT_SECNDARY_CURRENT_LIMIT = 22;
 
         // Linear Actuator
-        public final static int LINEAR_1_CAN_ID = 10;
-        public final static int LINEAR_2_CAN_ID = 11;
+        public final static int LINEAR_1_CAN_ID = 5;
+        public final static int LINEAR_2_CAN_ID = 60;
         public final static boolean LINEAR_INVERT = true;
         public final static double LINEAR_DEADBAND = .01;
 		public final static double LINEAR_MIN_TRAVEL = .01;
@@ -137,8 +137,8 @@ public class Constants {
 
         // Leadscrew
         //
-        public final static int LEADSCREW_1_CAN_ID = 6;
-        public final static int LEADSCREW_2_CAN_ID = 7;
+        public final static int LEADSCREW_1_CAN_ID = 2;
+        public final static int LEADSCREW_2_CAN_ID = 10;
         public final static double LEADSCREW_MAX_SPEED = 1; // For leadscrews without PIDs
         public final static double LEADSCREW_MAX_ERROR = 1; // Rotations
         public final static double LEADSCREW_MAX_TRAVEL = 13000; // Native Units
