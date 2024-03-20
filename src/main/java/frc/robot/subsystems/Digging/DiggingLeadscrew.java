@@ -120,8 +120,8 @@ public class DiggingLeadscrew extends SubsystemBase {
     }
 
     public void leadscrewSetRawSpeed(RobotSide side, double speed) {
-        if (side == RobotSide.Left) m_leadscrew1.set(speed);
-        else if (side == RobotSide.Right) m_leadscrew2.set(speed);
+        if (side == RobotSide.Left) m_leadscrew1.set(-speed); // right side
+        else if (side == RobotSide.Right) m_leadscrew2.set(-speed); // left side
     }
 
     public boolean leadscrewGetRawLimitSwitch(RobotSide side, MechanismPosition pos) {
@@ -190,8 +190,14 @@ public class DiggingLeadscrew extends SubsystemBase {
     }
 
     public void leadscrewSpeed(double speed) {
-        if (e_leadscrew.getPosition() <= LEADSCREW_MAX_ERROR && speed < 0) return;
-        if (e_leadscrew.getPosition() >= LEADSCREW_MAX_TRAVEL-LEADSCREW_MAX_ERROR && speed > 0) return;
+        if (e_leadscrew.getPosition() <= LEADSCREW_MAX_ERROR && speed < 0){
+            System.out.println("error1: " + e_leadscrew.getPosition());
+            return;
+        }
+        if (e_leadscrew.getPosition() >= LEADSCREW_MAX_TRAVEL-LEADSCREW_MAX_ERROR && speed > 0){
+            System.out.println("error2: " + e_leadscrew.getPosition());
+            return;
+        }
         leadscrewState = LeadscrewState.Traveling;
         m_leadscrew1.set(speed);
     }
