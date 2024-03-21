@@ -24,21 +24,19 @@ public class OperatorDrive extends CommandBase {
     @Override
     public void execute() {
         double leadscrewSpeed = 0;
-        double leftTrigger = m_xbox.getLeftTriggerAxis(); // 
+        double leftTrigger = m_xbox.getLeftTriggerAxis();
         double rightTrigger = m_xbox.getRightTriggerAxis();
 
         if (leftTrigger > AXIS_DEADZONE && rightTrigger > AXIS_DEADZONE) {
             leadscrewSpeed = 0;
-            System.out.println("here");
         }
         else if (leftTrigger > AXIS_DEADZONE){
-			leadscrewSpeed = -1 * leftTrigger;
+			leadscrewSpeed = -1*leftTrigger;
 		}
 		else if (rightTrigger > AXIS_DEADZONE){
 			leadscrewSpeed = rightTrigger;
 		}
-        System.out.println(MathUtil.clamp(leadscrewSpeed, -.25, .25));
-		m_leadscrew.leadscrewSpeed(MathUtil.clamp(leadscrewSpeed, -.25, .25));
+		m_leadscrew.leadscrewSpeed(MathUtil.clamp(leadscrewSpeed, -1, 0.5));
     }
 
     @Override

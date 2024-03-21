@@ -139,14 +139,25 @@ public class Constants {
         //
         public final static int LEADSCREW_1_CAN_ID = 2;
         public final static int LEADSCREW_2_CAN_ID = 10;
-        public final static double LEADSCREW_MAX_SPEED = 1; // For leadscrews without PIDs
+        public final static boolean LEADSCREW_INVERT = true;
+        public final static double LEADSCREW_MAX_ACCEL = 11000 * 0.5; // RPM/s
+        public final static double LEADSCREW_MAX_VEL = 11000 * 0.5; // RPM
+        public final static double LEADSCREW_MIN_VEL = 10; // RPM
         public final static double LEADSCREW_MAX_ERROR = 1; // Rotations
         public final static double LEADSCREW_MAX_TRAVEL = 13000; // Native Units
+        public final static double LEADSCREW_MAX_SPEED = 1; // For leadscrews without PIDs
+        public final static double LEADSCREW_EXTENDED_POS = 13000; //TODO: Put a real value here
         public final static double LEADSCREW_kP = 0.0000000015;
-		public final static double LEADSCREW_kI = 0.000002;
-		public final static double LEADSCREW_kD = 0.000005;
-		public final static double LEADSCREW_kIZ = 20;
-		public final static double LEADSCREW_kFF = 0.000080;
+        public final static double LEADSCREW_kI = 0.000002;
+        public final static double LEADSCREW_kD = 0.000005;
+        public final static double LEADSCREW_kIZ = 20;
+        public final static double LEADSCREW_kFF = 0.000080;
+        public final static double LEADSCREW_MAX_OUTPUT = .9;
+        public final static double LEADSCREW_MIN_OUTPUT = -.9;
+        public final static int LEADSCREW_CURRENT_LIMIT_STALL = 20;
+        public final static int LEADSCREW_CURRENT_LIMIT_FREE = 10;
+        public final static int LEADSCREW_SECNDARY_CURRENT_LIMIT = 22;
+        public final static IdleMode LEADSCREW_IDLE_MODE = IdleMode.kBrake;
     }
 
 }

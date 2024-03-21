@@ -52,7 +52,8 @@ public class DiggingLeadscrew extends SubsystemBase {
 	private HashMap<String, GenericEntry> shuffleboardEntries = new HashMap<String, GenericEntry>();
 
     public class LeadscrewStatus {
-        public boolean topLimit() {
+        public boolean topLimit() 
+        {
             return l_leadscrew1Top.isPressed() || l_leadscrew2Top.isPressed();
         }
         public boolean bottomLimit() {
@@ -67,10 +68,14 @@ public class DiggingLeadscrew extends SubsystemBase {
         e_leadscrew = m_leadscrew1.getEncoder();
         p_leadscrew = m_leadscrew1.getPIDController();
 
-        l_leadscrew1Top = m_leadscrew1.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-        l_leadscrew1Bottom = m_leadscrew1.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-        l_leadscrew2Top = m_leadscrew2.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-        l_leadscrew2Bottom = m_leadscrew2.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        // l_leadscrew1Top = m_leadscrew1.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        // l_leadscrew1Bottom = m_leadscrew1.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        // l_leadscrew2Top = m_leadscrew2.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        // l_leadscrew2Bottom = m_leadscrew2.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        l_leadscrew1Top = m_leadscrew1.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        l_leadscrew1Bottom = m_leadscrew1.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        l_leadscrew2Top = m_leadscrew2.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        l_leadscrew2Bottom = m_leadscrew2.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
         leadscrewStatus = new LeadscrewStatus();
 
         networkTable = ntInstance.getTable("DiggingSubsystem");
@@ -168,6 +173,7 @@ public class DiggingLeadscrew extends SubsystemBase {
     public void leadscrew(LeadscrewState state) {
         if (!leadscrewInitialized) 
             return;
+        
         leadscrewState = LeadscrewState.Traveling;
         double command; 
         if (state == LeadscrewState.Extended) command = LEADSCREW_MAX_SPEED*0.5;

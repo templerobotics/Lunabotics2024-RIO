@@ -1,5 +1,6 @@
 package frc.robot.custom;
 import frc.robot.Constants.*;
+import frc.robot.subsystems.Drivebase;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax;
@@ -72,8 +73,17 @@ public class LunaSparkMax extends CANSparkMax {
                 this.setIdleMode(DrivebaseConstants.DRIVEBASE_IDLE_MODE);
                 this.getEncoder();
                 break;
-            case kDumping:
-                this.getAnalogSensor();
+            case kDiggingBelt:
+                this.setInverted(DiggingConstants.BELT_INVERT);
+                this.setSmartCurrentLimit(DiggingConstants.BELT_CURRENT_LIMIT_STALL, DiggingConstants.BELT_CURRENT_LIMIT_FREE);
+                this.setSecondaryCurrentLimit(DiggingConstants.BELT_SECNDARY_CURRENT_LIMIT);
+                break;
+            case kDiggingLeadscrew:
+                this.setSmartCurrentLimit(DiggingConstants.LEADSCREW_CURRENT_LIMIT_STALL, DiggingConstants.LEADSCREW_CURRENT_LIMIT_FREE);
+                this.setSecondaryCurrentLimit(DiggingConstants.LEADSCREW_SECNDARY_CURRENT_LIMIT);
+                this.setInverted(DiggingConstants.LEADSCREW_INVERT);
+                this.setIdleMode(DiggingConstants.LEADSCREW_IDLE_MODE);
+                break;
             default: 
                 break;
         }
