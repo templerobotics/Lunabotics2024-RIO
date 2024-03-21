@@ -47,3 +47,5 @@ public class OperatorDigging extends CommandBase {
 	}
 
 }
+
+}

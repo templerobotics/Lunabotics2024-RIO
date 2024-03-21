@@ -1,7 +1,7 @@
 package frc.robot.commands.digging;
 
 import frc.robot.subsystems.digging.DiggingBelt;
-import edu.wpi.first.wpilibj2.command.CommandBase;;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DigForward extends CommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})

@@ -1,11 +1,14 @@
 package frc.robot.custom;
 import frc.robot.Constants.*;
+import frc.robot.subsystems.Drivebase;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
 import com.revrobotics.SparkMaxPIDController;
+
 import static frc.robot.Constants.SparkMaxConsants.*;
+import com.revrobotics.SparkMaxAnalogSensor;
 
 
 public class LunaSparkMax extends CANSparkMax {
@@ -13,12 +16,13 @@ public class LunaSparkMax extends CANSparkMax {
     private final Presets preset;
     private final int can_id;
     private RelativeEncoder encoder;
+    private SparkMaxAnalogSensor analogSensor;
     private SparkMaxPIDController pid;
 
     private static final int[] PRIMES = new int[]{0, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109};
 
     public enum Presets {
-        kNone, kDrivebase, kDiggingBelt, kDiggingLeadscrew
+        kNone, kDrivebase, kDiggingBelt, kDiggingLeadscrew, kDiggingActuator, kDumping;
     }
 
     /**
@@ -56,21 +60,35 @@ public class LunaSparkMax extends CANSparkMax {
         this.setIdleMode(DEFAULT_IDLE_MODE);
         this.setSmartCurrentLimit(DEFAULT_SMART_CURRENT_LIMIT);
         this.setSecondaryCurrentLimit(DEFAULT_SECONDARY_CURRENT_LIMIT);
+        /*
         this.setPeriodicFramePeriod(PeriodicFrame.kStatus0, PRIMES[can_id]);
 		this.setPeriodicFramePeriod(PeriodicFrame.kStatus1, PRIMES[can_id+10]);
 		this.setPeriodicFramePeriod(PeriodicFrame.kStatus2, PRIMES[can_id+10]);
+        */
         switch(this.preset) {
             case kDrivebase:
                 this.setSmartCurrentLimit(DrivebaseConstants.CURRENT_LIMIT_STALL, DrivebaseConstants.CURRENT_LIMIT_FREE);
                 this.setSecondaryCurrentLimit(DrivebaseConstants.SECONDARY_CURRENT_LIMIT);
                 this.setOpenLoopRampRate(DrivebaseConstants.RAMP_RATE_SECONDS);
                 this.setIdleMode(DrivebaseConstants.DRIVEBASE_IDLE_MODE);
+                this.getEncoder();
+                break;
+            case kDiggingBelt:
+                this.setInverted(DiggingConstants.BELT_INVERT);
+                this.setSmartCurrentLimit(DiggingConstants.BELT_CURRENT_LIMIT_STALL, DiggingConstants.BELT_CURRENT_LIMIT_FREE);
+                this.setSecondaryCurrentLimit(DiggingConstants.BELT_SECNDARY_CURRENT_LIMIT);
+                break;
+            case kDiggingLeadscrew:
+                this.setSmartCurrentLimit(DiggingConstants.LEADSCREW_CURRENT_LIMIT_STALL, DiggingConstants.LEADSCREW_CURRENT_LIMIT_FREE);
+                this.setSecondaryCurrentLimit(DiggingConstants.LEADSCREW_SECNDARY_CURRENT_LIMIT);
+                this.setInverted(DiggingConstants.LEADSCREW_INVERT);
+                this.setIdleMode(DiggingConstants.LEADSCREW_IDLE_MODE);
                 break;
             default: 
                 break;
         }
         this.getPIDController();
-        this.getEncoder();
+        
         this.set(0);
     }
     
@@ -91,7 +109,14 @@ public class LunaSparkMax extends CANSparkMax {
         this.encoder = encoder;
         return encoder;
     }
+
+    public SparkMaxAnalogSensor getAnalogSensor() {
+        if (this.analogSensor != null) return this.analogSensor;
+        SparkMaxAnalogSensor analogSensor = super.getAnalog(SparkMaxAnalogSensor.Mode.kAbsolute);
     
+        this.analogSensor = analogSensor;
+        return analogSensor;
+    }
     
     /**
      * @return An object for interfacing with SparkMax integrated PID Controller

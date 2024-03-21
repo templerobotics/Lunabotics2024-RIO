@@ -4,10 +4,8 @@ import static frc.robot.Constants.DrivebaseConstants.*;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import frc.robot.custom.LunaSparkMax.Presets;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.custom.LunaSparkMax;
@@ -18,6 +16,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import frc.robot.custom.LunaMathUtils;
 import static frc.robot.Constants.GlobalConstants.*;
+import frc.robot.custom.LunaNavX;
 
 import java.util.HashMap;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -42,6 +41,9 @@ public class Drivebase extends SubsystemBase {
     private final SparkMaxPIDController p_rightFront;
     private final SparkMaxPIDController p_rightRear;
 
+    // navX IMU
+	private final LunaNavX navX;
+
     // Motor enums
     public static enum Motors {
         leftFront, leftRear, rightFront, rightRear
@@ -54,6 +56,10 @@ public class Drivebase extends SubsystemBase {
 
     public enum InputScaling {
 		Linear, Cubic
+	}
+
+    public static enum IMU {
+		accelX, accelY, accelZ, gyroX, gyroY, gyroZ
 	}
 
     public interface ScalarFunction {
@@ -97,6 +103,9 @@ public class Drivebase extends SubsystemBase {
         m_leftRear.setInverted(INVERT_LEFT);
         m_rightFront.setInverted(INVERT_RIGHT);
         m_rightRear.setInverted(INVERT_RIGHT);
+
+        // Instantiate navX
+		navX = new LunaNavX();
 
         networkTable = ntInstance.getTable("DrivebaseSubsystem");
 
@@ -330,7 +339,7 @@ public class Drivebase extends SubsystemBase {
         }
     }
 
-    /*
+    
     public void resetIMU() {
 		navX.reset();
 	}
@@ -367,7 +376,6 @@ public class Drivebase extends SubsystemBase {
 				return 0;
 		}
 	}
-    */
 
     private void reportInitialPID() {
 		pidNTEntries.put("drive-kP", Shuffleboard.getTab("Drivebase PID").add("P Gain", PID_kP).getEntry());
@@ -435,15 +443,13 @@ public class Drivebase extends SubsystemBase {
 		shuffleboardEntries.get("speed-rr").setDouble(LunaMathUtils.roundToPlace(e_rightRear.getVelocity(), 2));
 
 		// navX IMU
-        /*
-		shuffleboardEntries.get("imu-accel-x").setNumber(LunaMathUtils.roundToPlace(navX.getAccelX(), 2));
-		shuffleboardEntries.get("imu-accel-y").setNumber(LunaMathUtils.roundToPlace(navX.getAccelY(), 2));
-		shuffleboardEntries.get("imu-accel-z").setNumber(LunaMathUtils.roundToPlace(navX.getAccelZ(), 2));
-		shuffleboardEntries.get("imu-gyro-x").setNumber(LunaMathUtils.roundToPlace(navX.getGyroX(), 2));
-		shuffleboardEntries.get("imu-gyro-y").setNumber(LunaMathUtils.roundToPlace(navX.getGyroY(), 2));
-		shuffleboardEntries.get("imu-gyro-z").setNumber(LunaMathUtils.roundToPlace(navX.getGyroZ(), 2));
+		shuffleboardEntries.get("imu-accel-x").setDouble(LunaMathUtils.roundToPlace(navX.getAccelX(), 2));
+		shuffleboardEntries.get("imu-accel-y").setDouble(LunaMathUtils.roundToPlace(navX.getAccelY(), 2));
+		shuffleboardEntries.get("imu-accel-z").setDouble(LunaMathUtils.roundToPlace(navX.getAccelZ(), 2));
+		shuffleboardEntries.get("imu-gyro-x").setDouble(LunaMathUtils.roundToPlace(navX.getGyroX(), 2));
+		shuffleboardEntries.get("imu-gyro-y").setDouble(LunaMathUtils.roundToPlace(navX.getGyroY(), 2));
+		shuffleboardEntries.get("imu-gyro-z").setDouble(LunaMathUtils.roundToPlace(navX.getGyroZ(), 2));
 		shuffleboardEntries.get("imu-moving").setBoolean(navX.isMoving());
-        */
 
 		// Backend NetworkTable
 		networkTable.getEntry("leftFrontPosition").setDouble(e_leftFront.getPosition());
@@ -458,14 +464,12 @@ public class Drivebase extends SubsystemBase {
 		networkTable.getEntry("leftRearCurrent").setDouble(m_leftRear.getOutputCurrent());
 		networkTable.getEntry("rightFrontCurrent").setDouble(m_rightFront.getOutputCurrent());
 		networkTable.getEntry("rightRearCurrent").setDouble(m_rightRear.getOutputCurrent());
-        /*
 		networkTable.getEntry("imuXAccel").setDouble(navX.getAccelX());
 		networkTable.getEntry("imuYAccel").setDouble(navX.getAccelY());
 		networkTable.getEntry("imuZAccel").setDouble(navX.getAccelZ());
 		networkTable.getEntry("imuXGyro").setDouble(navX.getGyroX());
 		networkTable.getEntry("imuYGyro").setDouble(navX.getGyroY());
 		networkTable.getEntry("imuZGyro").setDouble(navX.getGyroZ());
-        */
 	}
 }
 
