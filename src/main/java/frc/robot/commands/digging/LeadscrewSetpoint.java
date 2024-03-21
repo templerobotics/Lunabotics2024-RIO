@@ -1,7 +1,7 @@
 package frc.robot.commands.digging;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Digging.DiggingLeadscrew;
+import frc.robot.subsystems.digging.DiggingLeadscrew;
 
 public class LeadscrewSetpoint extends CommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})

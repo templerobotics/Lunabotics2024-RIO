@@ -2,7 +2,7 @@ package frc.robot.commands.init.leadscrew;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.GlobalConstants.RobotSide;
-import frc.robot.subsystems.Digging.DiggingLeadscrew;
+import frc.robot.subsystems.digging.DiggingLeadscrew;
 import static frc.robot.Constants.GlobalConstants.*;
 
 public class InitLeadscrewUp extends CommandBase {

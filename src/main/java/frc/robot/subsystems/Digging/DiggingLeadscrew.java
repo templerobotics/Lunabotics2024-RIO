@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Digging;
+package frc.robot.subsystems.digging;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
