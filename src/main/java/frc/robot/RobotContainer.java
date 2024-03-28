@@ -24,6 +24,7 @@ import frc.robot.subsystems.BMS;
 import static frc.robot.ButtonMapping.*;
 import frc.robot.commands.init.leadscrew.InitLeadscrewDown;
 import frc.robot.commands.init.leadscrew.InitLeadscrewUp;
+import frc.robot.custom.HallEffectSensor;
 import frc.robot.commands.dumping.LowerDumpingActuator;
 // Dumping
 import frc.robot.commands.dumping.RaiseDumpingActuator;
@@ -43,6 +44,7 @@ public class RobotContainer {
     // Input Devices
     private final XboxController i_driverXbox = new XboxController(XBOX_CONTROLLER_DRIVER);
     private final XboxController i_operatorXbox = new XboxController(XBOX_CONTROLLER_OPERATOR);
+	private HallEffectSensor hf = new HallEffectSensor();
 
     // Commands
     private final XboxDrive c_XboxDrive = new XboxDrive(s_Drivebase, i_driverXbox);

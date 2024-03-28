@@ -4,12 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.custom.LunaMathUtils;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -28,9 +30,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private GenericEntry nt_FPGATimestamp;
-
-
-
+  private Counter counter = new Counter(Counter.Mode.kTwoPulse);
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -50,13 +50,17 @@ public class Robot extends TimedRobot {
     //nt_FPGATimestamp = Shuffleboard.getTab("Competition").add("FPGA Time", LunaMathUtils.roundToPlace(Timer.getFPGATimestamp(), 2)).withSize(1, 1).withPosition(0, 0).getEntry();
   
     nt_FPGATimestamp = Shuffleboard.getTab("Competition").add("FPGA Time", 0).withSize(1, 1).withPosition(0, 0).getEntry();
-    
+
+   
+    counter.setUpSource(0);
+    counter.setDownSource(1);
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     nt_FPGATimestamp.setDouble(LunaMathUtils.roundToPlace(Timer.getFPGATimestamp(), 2));
+    SmartDashboard.putNumber("Hall Effect Sensor", counter.getRate());
   }
 
   @Override
