@@ -99,7 +99,7 @@ public class Constants {
 
     public final static class DiggingConstants {
         // Belt
-		public final static int BELT_1_CAN_ID = 3;
+		public final static int BELT_1_CAN_ID = 10;
 		public final static int BELT_1_PDP_ID = 0;
 		public final static int BELT_2_CAN_ID = 11;
 		public final static int BELT_2_PDP_ID = 0;
@@ -122,23 +122,24 @@ public class Constants {
 		public final static int BELT_SECNDARY_CURRENT_LIMIT = 22;
 
         // Linear Actuator
-        public final static int LINEAR_1_CAN_ID = 5;
-        public final static int LINEAR_2_CAN_ID = 60;
+        //
+        public final static int LINEAR_2_CAN_ID = 4;
+        public final static int LINEAR_3_CAN_ID = 12;
         public final static boolean LINEAR_INVERT = true;
         public final static double LINEAR_DEADBAND = .01;
-		public final static double LINEAR_MIN_TRAVEL = .01;
-		public final static double LINEAR_MAX_TRAVEL = 0.55; //0.55
+		public final static double LINEAR_MIN_TRAVEL = 1.438; //1.438; // 0.2876; // 1.438
+		public final static double LINEAR_MAX_TRAVEL = 3.3; //3.3; //0.55
 		public final static double LINEAR_2_ADJUSTMENT = -0.02;
-        public final static double LINEAR_kP = 0.1;
-		public final static double LINEAR_kI = 0.000002;
-		public final static double LINEAR_kD = 0.000005;
-		public final static double LINEAR_kIZ = 20;
-		public final static double LINEAR_kFF = 0.000080;
+        public final static double DIGGING_LINEAR_kP = 0.1;
+		public final static double DIGGING_LINEAR_kI = 0.000002;
+		public final static double DIGGING_LINEAR_kD = 0.000005;
+		public final static double DIGGING_LINEAR_kIZ = 20;
+		public final static double DIGGING_LINEAR_kFF = 0.000080;
 
         // Leadscrew
         //
         public final static int LEADSCREW_1_CAN_ID = 2;
-        public final static int LEADSCREW_2_CAN_ID = 10;
+        public final static int LEADSCREW_2_CAN_ID = 3;
         public final static boolean LEADSCREW_INVERT = true;
         public final static double LEADSCREW_MAX_ACCEL = 11000 * 0.5; // RPM/s
         public final static double LEADSCREW_MAX_VEL = 11000 * 0.5; // RPM
@@ -158,6 +159,20 @@ public class Constants {
         public final static int LEADSCREW_CURRENT_LIMIT_FREE = 10;
         public final static int LEADSCREW_SECNDARY_CURRENT_LIMIT = 22;
         public final static IdleMode LEADSCREW_IDLE_MODE = IdleMode.kBrake;
+    }
+
+    public final static class DumpingConstants {
+        public final static int LINEAR_1_CAN_ID = 5;
+        public final static boolean LINEAR_INVERT = true;
+        public final static double LINEAR_DEADBAND = .01;
+		public final static double LINEAR_MIN_TRAVEL = 0.6; //.01;
+		public final static double LINEAR_MAX_TRAVEL = 3.3; //0.55; //0.55
+		public final static double LINEAR_2_ADJUSTMENT = -0.02;
+        public final static double LINEAR_kP = 0.1;
+		public final static double LINEAR_kI = 0.000002;
+		public final static double LINEAR_kD = 0.000005;
+		public final static double LINEAR_kIZ = 20;
+		public final static double LINEAR_kFF = 0.000080;
     }
 
 }

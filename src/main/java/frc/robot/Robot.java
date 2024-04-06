@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.custom.LunaMathUtils;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -23,7 +24,9 @@ public class Robot extends TimedRobot {
   private Command c_XboxDrive;
   private Command c_OperatorDrive;
 	private Command c_InitializeLeadscrew;
-  private Command c_InitializeLinearActuator;
+  private Command c_InitializeDumpingActuator;
+  private Command c_InitializeDiggingActuator;
+  private Command c_autonomousCommand;
   
   private RobotContainer m_robotContainer;
 
@@ -42,10 +45,11 @@ public class Robot extends TimedRobot {
     // gearbox is constructed, you might have to invert the left side instead.
     m_robotContainer = new RobotContainer();
 
-    c_XboxDrive = m_robotContainer.getXboxDrive();
+    // c_XboxDrive = m_robotContainer.getXboxDrive();
     c_OperatorDrive = m_robotContainer.getOperatorDrive();
     c_InitializeLeadscrew = m_robotContainer.getInitializeLeadscrewCommand();
-    c_InitializeLinearActuator = m_robotContainer.getInitializeLinearCommand();
+    c_InitializeDumpingActuator = m_robotContainer.getInitializeDumpingCommand();
+    c_InitializeDiggingActuator = m_robotContainer.getInitializeDiggingActuatorCommand();
     //c_XboxDrive = m_robotContainer.getXboxDrive();
     //nt_FPGATimestamp = Shuffleboard.getTab("Competition").add("FPGA Time", LunaMathUtils.roundToPlace(Timer.getFPGATimestamp(), 2)).withSize(1, 1).withPosition(0, 0).getEntry();
   
@@ -66,35 +70,33 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic(){}
 
   /** This function is run once each time the robot enters autonomous mode. */
-  /*
+
   @Override
   public void autonomousInit() {
-    m_timer.restart();
-  }
-  */
+    c_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-  /** This function is called periodically during autonomous. */
-  /*
-  @Override
-  public void autonomousPeriodic() {
-    // Drive for 2 seconds
-    if (m_timer.get() < 2.0) {
-      // Drive forwards half speed, make sure to turn input squaring off
-      m_robotDrive.arcadeDrive(0.5, 0.0, false);
-    } else {
-      m_robotDrive.stopMotor(); // stop robot
+    // schedule the autonomous command (example)
+    if (c_autonomousCommand != null) {
+      c_autonomousCommand.schedule();
     }
   }
-  */
+  
 
+  /** This function is called periodically during autonomous. */
+  
+  @Override
+  public void autonomousPeriodic() {}
+  
   /** This function is called once each time the robot enters teleoperated mode. */
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
+    c_XboxDrive = m_robotContainer.getXboxDrive();
     c_XboxDrive.schedule();
     c_OperatorDrive.schedule();
 		if (!m_robotContainer.isLeadscrewInitialized()) c_InitializeLeadscrew.schedule();
-    if (!m_robotContainer.isLinearActuatorInitialized()) c_InitializeLinearActuator.schedule();
+    if (!m_robotContainer.isDumpingActuatorInitialized()) c_InitializeDumpingActuator.schedule();
+    if (!m_robotContainer.isDiggingActuatorInitialized()) c_InitializeDiggingActuator.schedule();
   }
 
   /** This function is called periodically during teleoperated mode. */

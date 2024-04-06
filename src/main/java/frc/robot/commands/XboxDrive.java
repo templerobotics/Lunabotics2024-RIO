@@ -57,10 +57,10 @@ public class XboxDrive extends CommandBase {
 		rightSpeed = 0;
 
 		//pirouetting = m_xbox.getStickButton(m_xbox.kLeftStick);
-        pirouetting = m_xbox.getLeftStickButton();
+        pirouetting = m_xbox.getRightStickButton();
 		//turn = m_xbox.getX(Hand.kRight);
 		ScalarFunction scalarFunction = m_drivebase.getInputScaling();
-		turn = pirouetting ? scalarFunction.calculate(m_xbox.getLeftX()) : m_xbox.getRightX()*0.5;
+		turn = pirouetting ? scalarFunction.calculate(m_xbox.getRightX()) : m_xbox.getRightX()*0.5;
 		throttle = scalarFunction.calculate(-1 * m_xbox.getLeftY()); // Invert throttle (up = forward)
 
 		if (pirouetting && Math.abs(turn) > AXIS_DEADZONE) { // If turning in place

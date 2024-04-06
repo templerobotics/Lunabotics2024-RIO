@@ -11,12 +11,12 @@ import frc.robot.subsystems.Dumping;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import static frc.robot.Constants.GlobalConstants.*;
-import static frc.robot.Constants.DiggingConstants.LINEAR_MIN_TRAVEL;
+import static frc.robot.Constants.DumpingConstants.LINEAR_MIN_TRAVEL;
 
 /**
  * An example command that uses an example subsystem.
  */
-public class InitLinearActuator extends CommandBase {
+public class InitDumpingActuator extends CommandBase {
 	@SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 	private final Dumping m_subsystem;
 
@@ -27,7 +27,7 @@ public class InitLinearActuator extends CommandBase {
 	 *
 	 * @param subsystem The subsystem used by this command.
 	 */
-	public InitLinearActuator(Dumping subsystem) {
+	public InitDumpingActuator(Dumping subsystem) {
 		m_subsystem = subsystem;
 		// Use addRequirements() here to declare subsystem dependencies.
 		addRequirements(subsystem);
