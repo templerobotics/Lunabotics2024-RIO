@@ -142,8 +142,8 @@ public class DiggingLeadscrew extends SubsystemBase {
 
 
     public void leadscrewSetRawSpeed(RobotSide side, double speed) {
-        if (side == RobotSide.Left) m_leadscrew1.set(0.1); // right side
-        else if (side == RobotSide.Right) m_leadscrew2.set(0.1); // left side
+        if (side == RobotSide.Left) m_leadscrew1.set(-speed); // right side
+        else if (side == RobotSide.Right) m_leadscrew2.set(-speed); // left side
     }
 
 
@@ -352,12 +352,4 @@ public class DiggingLeadscrew extends SubsystemBase {
         networkTable.getEntry("leadscrew2Current").setDouble(m_leadscrew2.getOutputCurrent());
     }
 
-
-
-
-
-
-
-
 }
-

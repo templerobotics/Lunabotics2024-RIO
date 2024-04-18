@@ -15,6 +15,9 @@ import frc.robot.subsystems.Digging.DiggingBelt;
 import frc.robot.commands.OperatorDrive;
 import frc.robot.commands.digging.ExtendLeadscrew;
 import frc.robot.commands.digging.LeadscrewSetpoint;
+import frc.robot.commands.dumping.OpenRopeServo;
+import frc.robot.commands.dumping.CloseRopeServo;
+import frc.robot.subsystems.DumpServo;
 
 import frc.robot.commands.digging.OperatorDigging;
 import frc.robot.commands.digging.RaiseDiggingActuator;
@@ -44,6 +47,7 @@ public class RobotContainer {
     private final DiggingBelt s_DiggingBelt = new DiggingBelt();
 	private final Dumping s_DumpingLinearActuator = new Dumping();
 	private final DiggingLinearActuator s_DiggingLinearActuator = new DiggingLinearActuator();
+	private final DumpServo s_ropeServo = new DumpServo();
 	// private final BMS s_BMS = new BMS();
 
 
@@ -61,6 +65,8 @@ public class RobotContainer {
 	private final RaiseDiggingActuator c_RaiseDiggingActuator = new RaiseDiggingActuator(s_DiggingLinearActuator);
 	private final LowerDiggingActuator c_LowerDiggingActuator = new LowerDiggingActuator(s_DiggingLinearActuator);
 	private final InitDiggingActuator c_InitDiggingActuator = new InitDiggingActuator(s_DiggingLinearActuator);
+	private final OpenRopeServo c_OpenRopeServo = new OpenRopeServo(s_ropeServo);
+	private final CloseRopeServo c_CloseRopeServo = new CloseRopeServo(s_ropeServo);
 
 	private final LeadscrewSetpoint c_LeadscrewSetpoint = new LeadscrewSetpoint(s_DiggingLeadscrew);
     private final OperatorDigging c_OperatorDigging = new OperatorDigging(s_DiggingBelt, i_driverXbox);
@@ -82,12 +88,17 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
-		POVButton operatorDPadUpButton = new POVButton(i_driverXbox, DumpUp); // D-Pad Up
-		operatorDPadUpButton.onTrue(c_RaiseDumpingActuator);
+		POVButton driverDPadUpButton = new POVButton(i_driverXbox, DumpUp); // D-Pad Up
+		driverDPadUpButton.onTrue(c_RaiseDumpingActuator);
 
-		POVButton operatorDPadDownButton = new POVButton(i_driverXbox, DumpDown); // D-Pad Up
-		operatorDPadDownButton.onTrue(c_LowerDumpingActuator);
+		POVButton driverDPadDownButton = new POVButton(i_driverXbox, DumpDown); // D-Pad Up
+		driverDPadDownButton.onTrue(c_LowerDumpingActuator);
 
+		POVButton driverDPadLeftButton = new POVButton(i_driverXbox, 270);
+		driverDPadLeftButton.onTrue(c_OpenRopeServo);
+
+		POVButton driverDPadRightButton = new POVButton(i_driverXbox, 90);
+		driverDPadRightButton.onTrue(c_CloseRopeServo);
         
 		JoystickButton operatorXButton = new JoystickButton(i_operatorXbox, RaiseLinearActuator);
 		operatorXButton.whileTrue(c_RaiseDiggingActuator);

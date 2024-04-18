@@ -103,7 +103,8 @@ public class DiggingLinearActuator extends SubsystemBase {
         // This will be called once per scheduler run
         reportSensors(); 
         checkLimits();
-        checkPIDGains();
+        if (ENABLE_TEST_DASHBOARDS)
+            checkPIDGains();
        // System.out.println("DIGGING ACTUATOR 1 POSITION: " + a_linear1.getPosition());
        // System.out.println("DIGGING ACTUATOR 2 POSITION: " + a_linear2.getPosition());
     }
