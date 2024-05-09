@@ -40,7 +40,7 @@ import frc.robot.commands.dumping.LowerDumpingActuator;
 // Dumping
 import frc.robot.commands.dumping.RaiseDumpingActuator;
 import frc.robot.subsystems.Dumping;
-import frc.robot.commands.auto.AutoDumping;
+import frc.robot.commands.auto.AutoDumpingOpen;
 
 
 import frc.robot.commands.auto.AutoDriveTest;
@@ -96,7 +96,7 @@ public class RobotContainer {
     private final RaiseDumpingActuator c_RaiseDumpingActuator = new RaiseDumpingActuator(s_DumpingLinearActuator);
     private final LowerDumpingActuator c_LowerDumpingActuator = new LowerDumpingActuator(s_DumpingLinearActuator);
     private final InitDumpingActuator c_InitLinearActuator = new InitDumpingActuator(s_DumpingLinearActuator);
-    private final AutoDumping c_autoDumping = new AutoDumping(s_DumpingLinearActuator, s_ropeServo, s_gearServo, s_DiggingLinearActuator);
+    private final AutoDumpingOpen c_autoDumping = new AutoDumpingOpen(s_DumpingLinearActuator, s_ropeServo, s_DiggingLinearActuator);
 
 
     public RobotContainer() {
@@ -123,7 +123,7 @@ public class RobotContainer {
         driverDPadLeftButton.onTrue(c_OpenRopeServo);
 
         POVButton driverDPadRightButton = new POVButton(i_driverXbox, 90);
-        driverDPadRightButton.onTrue(c_CloseRopeServo);
+        driverDPadRightButton.toggleOnTrue(c_CloseRopeServo);
 
 
         POVButton driverDPadUpButton = new POVButton(i_driverXbox, 0);

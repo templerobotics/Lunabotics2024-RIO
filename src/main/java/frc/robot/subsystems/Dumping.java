@@ -167,6 +167,7 @@ public class Dumping extends SubsystemBase {
 		linearInitialized = true;
 	}
 
+
     public boolean isLinearActuatorInitialized() {
         return linearInitialized;
     }
@@ -202,6 +203,16 @@ public class Dumping extends SubsystemBase {
 		linearUp();
 		linearState = LinearActuatorState.Commanded;
 	}
+
+    public void initializeUp()
+    {
+        linearUp();
+    }
+
+    public void initializeDown()
+    {
+        linearDown();
+    }
 
 	public void commandStop(){
 		linearStop();
