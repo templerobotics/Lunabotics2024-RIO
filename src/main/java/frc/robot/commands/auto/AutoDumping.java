@@ -66,7 +66,6 @@ public class AutoDumping extends CommandBase
       m_Drivebase.drive(-1, -1);
     }
     m_Drivebase.drive(0, 0);
-    // double currentTime = timer.get();
 
     if (!servoActive) {
         servoTimer.start();
@@ -87,7 +86,9 @@ public class AutoDumping extends CommandBase
         new WaitCommand(4),  // Wait for 4 seconds
         new InstantCommand(() -> m_DiggingLinear.linearActuatorInitEndAutoDigging(), m_DiggingLinear),
         new InstantCommand(() -> m_Dumping.linearActuator(LinearActuatorState.Raised), m_Dumping)).schedule();
+        dumpingFinished = true;
   }
+  
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
@@ -95,6 +96,6 @@ public class AutoDumping extends CommandBase
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return dumpingFinished;
   }
 }
