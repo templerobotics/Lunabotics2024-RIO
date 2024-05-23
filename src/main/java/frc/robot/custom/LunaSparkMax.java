@@ -55,6 +55,7 @@ public class LunaSparkMax extends CANSparkMax {
      * Applies default motor properties and overrides as specified in Constants.java
      */
     public void setMotorProperties() {
+        /*
         this.restoreFactoryDefaults();
         this.setOpenLoopRampRate(DEFAULT_OPEN_LOOP_RAMP_RATE);
         this.setIdleMode(DEFAULT_IDLE_MODE);
@@ -65,6 +66,7 @@ public class LunaSparkMax extends CANSparkMax {
 		this.setPeriodicFramePeriod(PeriodicFrame.kStatus1, PRIMES[can_id+10]);
 		this.setPeriodicFramePeriod(PeriodicFrame.kStatus2, PRIMES[can_id+10]);
         */
+        /*
         switch(this.preset) {
             case kDrivebase:
                 this.setSmartCurrentLimit(DrivebaseConstants.CURRENT_LIMIT_STALL, DrivebaseConstants.CURRENT_LIMIT_FREE);
@@ -88,7 +90,7 @@ public class LunaSparkMax extends CANSparkMax {
                 break;
         }
         this.getPIDController();
-        
+        */
         this.set(0);
     }
     

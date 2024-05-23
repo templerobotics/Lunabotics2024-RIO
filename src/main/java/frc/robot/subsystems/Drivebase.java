@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.DrivebaseConstants.*;
 
+import static frc.robot.Constants.DrivebaseConstants;
+
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -126,6 +128,26 @@ public class Drivebase extends SubsystemBase {
         m_rightFront.setInverted(INVERT_RIGHT);
         m_rightRear.setInverted(INVERT_RIGHT);
 
+        m_leftFront.setSmartCurrentLimit(DrivebaseConstants.CURRENT_LIMIT_STALL, DrivebaseConstants.CURRENT_LIMIT_FREE);
+        m_leftFront.setSecondaryCurrentLimit(DrivebaseConstants.SECONDARY_CURRENT_LIMIT);
+        m_leftFront.setOpenLoopRampRate(DrivebaseConstants.RAMP_RATE_SECONDS);
+        m_leftFront.setIdleMode(DrivebaseConstants.DRIVEBASE_IDLE_MODE);
+
+        m_leftRear.setSmartCurrentLimit(DrivebaseConstants.CURRENT_LIMIT_STALL, DrivebaseConstants.CURRENT_LIMIT_FREE);
+        m_leftRear.setSecondaryCurrentLimit(DrivebaseConstants.SECONDARY_CURRENT_LIMIT);
+        m_leftRear.setOpenLoopRampRate(DrivebaseConstants.RAMP_RATE_SECONDS);
+        m_leftRear.setIdleMode(DrivebaseConstants.DRIVEBASE_IDLE_MODE);
+
+        m_rightFront.setSmartCurrentLimit(DrivebaseConstants.CURRENT_LIMIT_STALL, DrivebaseConstants.CURRENT_LIMIT_FREE);
+        m_rightFront.setSecondaryCurrentLimit(DrivebaseConstants.SECONDARY_CURRENT_LIMIT);
+        m_rightFront.setOpenLoopRampRate(DrivebaseConstants.RAMP_RATE_SECONDS);
+        m_rightFront.setIdleMode(DrivebaseConstants.DRIVEBASE_IDLE_MODE);
+
+        m_rightRear.setSmartCurrentLimit(DrivebaseConstants.CURRENT_LIMIT_STALL, DrivebaseConstants.CURRENT_LIMIT_FREE);
+        m_rightRear.setSecondaryCurrentLimit(DrivebaseConstants.SECONDARY_CURRENT_LIMIT);
+        m_rightRear.setOpenLoopRampRate(DrivebaseConstants.RAMP_RATE_SECONDS);
+        m_rightRear.setIdleMode(DrivebaseConstants.DRIVEBASE_IDLE_MODE);
+
 
         // Instantiate navX
         navX = new LunaNavX();
@@ -176,10 +198,10 @@ public class Drivebase extends SubsystemBase {
         boolean unitFlag = APPLY_VELOCITY_SCALAR; // This solves a "cannot resolve import" error for whatever reason
         shuffleboardEntries.put("speed-units", Shuffleboard.getTab("Competition").add("Speed Units", unitFlag ? "m/s" : "RPM")
                 .withSize(1, 1).withPosition(1, 0).getEntry());
-        shuffleboardEntries.put("speed-lf", Shuffleboard.getTab("Competition").add("LF Speed", 0).withSize(1, 1).withPosition(0, 1).getEntry());
-        shuffleboardEntries.put("speed-rf", Shuffleboard.getTab("Competition").add("RF Speed", 0).withSize(1, 1).withPosition(1, 1).getEntry());
-        shuffleboardEntries.put("speed-lr", Shuffleboard.getTab("Competition").add("LR Speed", 0).withSize(1, 1).withPosition(0, 2).getEntry());
-        shuffleboardEntries.put("speed-rr", Shuffleboard.getTab("Competition").add("RR Speed", 0).withSize(1, 1).withPosition(1, 2).getEntry());
+        shuffleboardEntries.put("speed-lf", Shuffleboard.getTab("Jared-Malin").add("LF Speed", 0).withSize(1, 1).withPosition(0, 0).getEntry());
+        shuffleboardEntries.put("speed-rf", Shuffleboard.getTab("Jared-Malin").add("RF Speed", 0).withSize(1, 1).withPosition(1, 0).getEntry());
+        shuffleboardEntries.put("speed-lr", Shuffleboard.getTab("Jared-Malin").add("LR Speed", 0).withSize(1, 1).withPosition(0, 1).getEntry());
+        shuffleboardEntries.put("speed-rr", Shuffleboard.getTab("Jared-Malin").add("RR Speed", 0).withSize(1, 1).withPosition(1, 1).getEntry());
         shuffleboardEntries.put("encoder-lf", Shuffleboard.getTab("Competition").add("LF Encoder", 0).withSize(1, 1).withPosition(0, 3).getEntry());
         shuffleboardEntries.put("encoder-rf", Shuffleboard.getTab("Competition").add("RF Encoder", 0).withSize(1, 1).withPosition(1, 3).getEntry());
         shuffleboardEntries.put("encoder-lr", Shuffleboard.getTab("Competition").add("LR Encoder", 0).withSize(1, 1).withPosition(0, 4).getEntry());
@@ -193,6 +215,11 @@ public class Drivebase extends SubsystemBase {
         shuffleboardEntries.put("imu-gyro-x", Shuffleboard.getTab("Competition").add("IMU X-Gyro", 0).withSize(1, 1).withPosition(15, 1).getEntry());
         shuffleboardEntries.put("imu-gyro-y", Shuffleboard.getTab("Competition").add("IMU Y-Gyro", 0).withSize(1, 1).withPosition(15, 2).getEntry());
         shuffleboardEntries.put("imu-gyro-z", Shuffleboard.getTab("Competition").add("IMU Z-Gyro", 0).withSize(1, 1).withPosition(15, 3).getEntry());
+        shuffleboardEntries.put("Temperature-lf", Shuffleboard.getTab("Jared-Malin").add("LF Temperature", 0).withSize(1, 1).withPosition(0, 2).getEntry());
+        shuffleboardEntries.put("Temperature-rf", Shuffleboard.getTab("Jared-Malin").add("RF Temperature", 0).withSize(1, 1).withPosition(1, 2).getEntry());
+        shuffleboardEntries.put("Temperature-lr", Shuffleboard.getTab("Jared-Malin").add("LR Temperature", 0).withSize(1, 1).withPosition(0, 3).getEntry());
+        shuffleboardEntries.put("Temperature-rr", Shuffleboard.getTab("Jared-Malin").add("RR Temperature", 0).withSize(1, 1).withPosition(1, 3).getEntry());
+        
     }
 
 
@@ -504,6 +531,13 @@ public class Drivebase extends SubsystemBase {
         shuffleboardEntries.get("speed-lr").setDouble(LunaMathUtils.roundToPlace(e_leftRear.getVelocity(), 2));
         shuffleboardEntries.get("speed-rf").setDouble(LunaMathUtils.roundToPlace(e_rightFront.getVelocity(), 2));
         shuffleboardEntries.get("speed-rr").setDouble(LunaMathUtils.roundToPlace(e_rightRear.getVelocity(), 2));
+        
+        
+        //Motor Temperature
+        shuffleboardEntries.get("Temperature-lf").setDouble(LunaMathUtils.roundToPlace(m_leftFront.getMotorTemperature(), 2));
+        shuffleboardEntries.get("Temperature-lr").setDouble(LunaMathUtils.roundToPlace(m_leftRear.getMotorTemperature(), 2));
+        shuffleboardEntries.get("Temperature-rf").setDouble(LunaMathUtils.roundToPlace(m_rightFront.getMotorTemperature(), 2));
+        shuffleboardEntries.get("Temperature-rr").setDouble(LunaMathUtils.roundToPlace(m_rightRear.getMotorTemperature(), 2));
 
 
         // navX IMU

@@ -35,7 +35,7 @@ public class DumpServo extends SubsystemBase {
     }
 
     public void servoCClockwise() {
-        setRopeSpeed(-1.0);
+        setRopeSpeed(-1);
     }
 
     public double getRopeSpeed() {
@@ -45,8 +45,15 @@ public class DumpServo extends SubsystemBase {
     public void setRopeSpeed(double speed) {
         ropeServo.setSpeed(speed);
     }
+    
     public void stopRope() {
         ropeServo.setRaw(0);
+    }
+
+    public void stopServo()
+    {
+        stopRope();
+        System.out.println("Oomf");
     }
 
     public double getRopePosition() {

@@ -86,6 +86,7 @@ public class Dumping extends SubsystemBase {
 
     @Override
     public void periodic() {
+        
         // This will be called once per scheduler run
         reportSensors(); 
         checkLimits();
@@ -113,6 +114,10 @@ public class Dumping extends SubsystemBase {
         // System.out.println(p_linear.getP());
     }
 
+    public LinearActuatorState getLinearState() {
+        return linearState;
+    }
+
     private void linearUp() {
         /*
         if (a_linear.getPosition() >= (LINEAR_MAX_TRAVEL - LINEAR_DEADBAND)
@@ -133,7 +138,7 @@ public class Dumping extends SubsystemBase {
         }
         linearState = LinearActuatorState.TravelingUp;
         m_linear1.set(-1);
-    }       
+    }     
 
     private void linearDown() {
         //double test = LunaMathUtils.scaleBetween(a_linear.getPosition(), 0.48, 3.3, 0, 1);
@@ -152,7 +157,8 @@ public class Dumping extends SubsystemBase {
 
     public void linearActuatorInitStart() 
     {
-        linearDown();
+        // linearDown();
+        // linearUp();
     }
 
     public double linearActuatorGetRawPotentiometer() {
@@ -166,6 +172,7 @@ public class Dumping extends SubsystemBase {
 		linearNotifier.startPeriodic(0.005);
 		linearInitialized = true;
 	}
+
 
     public boolean isLinearActuatorInitialized() {
         return linearInitialized;
@@ -202,6 +209,16 @@ public class Dumping extends SubsystemBase {
 		linearUp();
 		linearState = LinearActuatorState.Commanded;
 	}
+
+    public void initializeUp()
+    {
+        linearUp();
+    }
+
+    public void initializeDown()
+    {
+        linearDown();
+    }
 
 	public void commandStop(){
 		linearStop();
@@ -283,6 +300,11 @@ public class Dumping extends SubsystemBase {
 		}
 
 	}
+
+    public double getCurrentDraw() {
+        System.out.println("Hello Puffle: " + m_linear1.getOutputCurrent() +"A");
+        return m_linear1.getOutputCurrent();
+    }
 
 
 }

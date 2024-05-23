@@ -31,7 +31,7 @@ import static frc.robot.Constants.GlobalConstants.*;
 import java.util.HashMap;
 
 
-public class DiggingLinearActuator extends SubsystemBase {
+public class DiggingUppies extends SubsystemBase {
     public enum LinearActuatorStateRight {
         Unknown, Raised, Lowered, TravelingUp, TravelingDown, Commanded;
     }
@@ -46,8 +46,6 @@ public class DiggingLinearActuator extends SubsystemBase {
     private final SparkMaxAnalogSensor a_linear2;
     private final SparkMaxPIDController p_linear1;
     private final SparkMaxPIDController p_linear2; 
-
-    private double maxTravel;
 
 
     private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
@@ -69,9 +67,8 @@ public class DiggingLinearActuator extends SubsystemBase {
     private HashMap<String, GenericEntry> pidNTEntries = new HashMap<String, GenericEntry>();
     private HashMap<String, GenericEntry> shuffleboardEntries = new HashMap<String, GenericEntry>();
 
-    boolean diggingUppies = false;
 
-    public DiggingLinearActuator(boolean uppies) {
+    public DiggingUppies() {
         m_linear1 = new LunaSparkMax(LINEAR_2_CAN_ID, MotorType.kBrushed);
         a_linear1 = m_linear1.getAnalogSensor();
         p_linear1 = m_linear1.getPIDController();
@@ -84,8 +81,6 @@ public class DiggingLinearActuator extends SubsystemBase {
 
         m_linear1.burnFlash();
         m_linear2.burnFlash();
-
-        diggingUppies = uppies;
 
 
         // m_linear2.follow(m_linear1, false);
@@ -146,20 +141,14 @@ public class DiggingLinearActuator extends SubsystemBase {
        // System.out.println("DIGGING ACTUATOR 2 POSITION: " + a_linear2.getPosition());
     }
 
-    public void setUppies(boolean uppies) {
-        diggingUppies = uppies;
-    }
-
 
     private void linearUp() {
-        
-        
-        if (a_linear1.getPosition() >= (maxTravel - LINEAR_DEADBAND) || linearStateRight == LinearActuatorStateRight.Lowered) {
+        if (a_linear1.getPosition() >= (LINEAR_MAX_TRAVEL2 - LINEAR_DEADBAND) || linearStateRight == LinearActuatorStateRight.Lowered) {
             m_linear1.stopMotor();
         
             return;
         }
-        if (a_linear2.getPosition() >= (maxTravel - LINEAR_DEADBAND) || linearStateLeft == LinearActuatorStateLeft.Lowered) {
+        if (a_linear2.getPosition() >= (LINEAR_MAX_TRAVEL2 - LINEAR_DEADBAND) || linearStateLeft == LinearActuatorStateLeft.Lowered) {
             m_linear2.stopMotor();
         
             return;
@@ -173,19 +162,7 @@ public class DiggingLinearActuator extends SubsystemBase {
         m_linear1.set(-1);
         m_linear2.set(-1);
     }
-    
-    public void setActuatorPosition(double position) {
-        double currentPos = a_linear1.getPosition(); // Assuming a_linear1 and a_linear2 should be at the same position
-        if (currentPos < position) {
-            linearUp();  // You might need to modify linearUp() to accept a position argument
-        } else if (currentPos > position) {
-            linearDown();  // Same here
-        }
-    }
 
-    public void setMaxTravel(double maxTrav) {
-        maxTravel = maxTrav;
-    }
 
     private void linearDown() {
         if (a_linear1.getPosition() <= LINEAR_MIN_TRAVEL
@@ -212,9 +189,8 @@ public class DiggingLinearActuator extends SubsystemBase {
 
 
     public void linearActuatorInitStart() {
-        // linearDown();
-        //linearUp();
-
+        linearDown();
+        // linearUp();
     }
 
     public void linearActuatorInitStartAuto()
@@ -295,7 +271,7 @@ public class DiggingLinearActuator extends SubsystemBase {
 
     public double getDashboardCommandedPosition() {
         return MathUtil.clamp(shuffleboardEntries.get("digging-position-command").getDouble(LINEAR_MIN_TRAVEL),
-                LINEAR_MIN_TRAVEL, maxTravel);
+                LINEAR_MIN_TRAVEL, LINEAR_MAX_TRAVEL2);
     }
 
 
@@ -399,47 +375,29 @@ public class DiggingLinearActuator extends SubsystemBase {
     }
 
 
-    public void checkLimits() {
+    private void checkLimits() {
         // System.out.println("Current Position: " + a_linear1.getPosition());
-        if (linearActuatorStateRight() != LinearActuatorStateRight.Raised && linearActuatorStateRight() != LinearActuatorStateRight.TravelingDown
-                && a_linear1.getPosition() >= (maxTravel - LINEAR_DEADBAND)) {
+        if (linearStateRight != LinearActuatorStateRight.Raised && linearStateRight != LinearActuatorStateRight.TravelingDown
+                && a_linear1.getPosition() >= (LINEAR_MAX_TRAVEL2 - LINEAR_DEADBAND)) {
             linearStateRight = LinearActuatorStateRight.Raised;
             linearStopRight();
         }
-        if (linearActuatorStateRight() != LinearActuatorStateRight.Lowered && linearActuatorStateRight() != LinearActuatorStateRight.TravelingUp
+        if (linearStateRight != LinearActuatorStateRight.Lowered && linearStateRight != LinearActuatorStateRight.TravelingUp
                 && a_linear1.getPosition() <= LINEAR_MIN_TRAVEL) {
             linearStateRight = LinearActuatorStateRight.Lowered;
             linearStopRight();
         }
-        if (linearActuatorStateLeft() != LinearActuatorStateLeft.Raised && linearActuatorStateLeft() != LinearActuatorStateLeft.TravelingDown
-                && a_linear2.getPosition() >= (maxTravel - LINEAR_DEADBAND)) {
+        if (linearStateLeft != LinearActuatorStateLeft.Raised && linearStateLeft != LinearActuatorStateLeft.TravelingDown
+                && a_linear2.getPosition() >= (LINEAR_MAX_TRAVEL2 - LINEAR_DEADBAND)) {
             linearStateLeft = LinearActuatorStateLeft.Raised;
             linearStopLeft();
         }
-        if (linearActuatorStateLeft() != LinearActuatorStateLeft.Lowered && linearActuatorStateLeft() != LinearActuatorStateLeft.TravelingUp
+        if (linearStateLeft != LinearActuatorStateLeft.Lowered && linearStateLeft != LinearActuatorStateLeft.TravelingUp
                 && a_linear2.getPosition() <= LINEAR_MIN_TRAVEL) {
             linearStateLeft = LinearActuatorStateLeft.Lowered;
             linearStopLeft();
         }
     }
-    public void checkLimitsRightLowered()
-    {
-        if (linearActuatorStateRight() != LinearActuatorStateRight.Lowered && linearActuatorStateRight() != LinearActuatorStateRight.TravelingUp
-                && a_linear1.getPosition() <= LINEAR_MIN_TRAVEL) {
-            linearStateRight = LinearActuatorStateRight.Lowered;
-            linearStopRight();
-        }
-    }
-
-    public void checkLimitsLeftLowered()
-    {
-        if (linearActuatorStateLeft() != LinearActuatorStateLeft.Lowered && linearActuatorStateLeft() != LinearActuatorStateLeft.TravelingUp
-        && a_linear2.getPosition() <= LINEAR_MIN_TRAVEL) {
-        linearStateLeft = LinearActuatorStateLeft.Lowered;
-        linearStopLeft();
-    }
-    }
-    
 
 
     public class LinearActuatorLimits implements Runnable {

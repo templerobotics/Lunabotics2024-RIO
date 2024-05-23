@@ -43,8 +43,8 @@ public class Constants {
     public final static class SparkMaxConsants {
         public final static double DEFAULT_OPEN_LOOP_RAMP_RATE = 1;
         public final static IdleMode DEFAULT_IDLE_MODE = IdleMode.kCoast;
-        public final static int DEFAULT_SMART_CURRENT_LIMIT = 5;
-        public final static double DEFAULT_SECONDARY_CURRENT_LIMIT = 10;
+        public final static int DEFAULT_SMART_CURRENT_LIMIT = 40;
+        public final static double DEFAULT_SECONDARY_CURRENT_LIMIT = 40;
     }
 
 
@@ -148,7 +148,8 @@ public class Constants {
         public final static boolean LINEAR_INVERT = true;
         public final static double LINEAR_DEADBAND = .01;
         public final static double LINEAR_MIN_TRAVEL = 0; //1.438; // 0.2876; // 1.438
-        public final static double LINEAR_MAX_TRAVEL = 0.5; //1;//3.3; //3.3; //0.55
+        public final static double LINEAR_MAX_TRAVEL = 0.7; //1;//3.3; //3.3; //0.55
+        public final static double LINEAR_MAX_TRAVEL2 = 0.7; //0.65
         public final static double LINEAR_2_ADJUSTMENT = -0.02;
         public final static double DIGGING_LINEAR_kP = 0.0;//0.1;
         public final static double DIGGING_LINEAR_kI = 0.0;//0.000002;

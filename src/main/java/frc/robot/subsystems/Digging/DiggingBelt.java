@@ -357,13 +357,13 @@ public class DiggingBelt extends SubsystemBase {
 
 
     private void createDashboardData(){
-        shuffleboardEntries.put("belt-run", Shuffleboard.getTab("Competition").add("Dig Belt Run", false).withSize(1,1).withPosition(9,0).getEntry());
-        shuffleboardEntries.put("belt-units", Shuffleboard.getTab("Competition").add("Dig Belt Units", "RPM").withSize(1, 1).withPosition(9, 1).getEntry());
-        shuffleboardEntries.put("belt-speed1", Shuffleboard.getTab("Competition").add("Real Speed1", 0).withSize(1, 1).withPosition(9, 2).getEntry());
-        shuffleboardEntries.put("belt-speed2", Shuffleboard.getTab("Competition").add("Real Speed2", 0).withSize(1, 1).withPosition(10, 2).getEntry());
-        shuffleboardEntries.put("belt-speed-slider", Shuffleboard.getTab("Competition").add("Command Speed", beltSpeed).withSize(3, 1).withPosition(8, 3).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 11000)).getEntry());
-        shuffleboardEntries.put("motor-temperature-1", Shuffleboard.getTab("Competition").add("Leader Temperature", m_belt1.getMotorTemperature() + " C").withSize(1,1).withPosition(9,4).getEntry());
-        shuffleboardEntries.put("motor-temperature-2", Shuffleboard.getTab("Competition").add("Follower Temperature", m_belt2.getMotorTemperature() + " C").withSize(1,1).withPosition(10,4).getEntry());
+        shuffleboardEntries.put("belt-run", Shuffleboard.getTab("Jared-Malin").add("Dig Belt Run", false).withSize(1,1).withPosition(9,0).getEntry());
+        shuffleboardEntries.put("belt-units", Shuffleboard.getTab("Jared-Malin").add("Dig Belt Units", "RPM").withSize(1, 1).withPosition(9, 1).getEntry());
+        shuffleboardEntries.put("belt-speed-Right", Shuffleboard.getTab("Jared-Malin").add("Real Speed1", 0).withSize(1, 1).withPosition(9, 2).getEntry());
+        shuffleboardEntries.put("belt-speed-Left", Shuffleboard.getTab("Jared-Malin").add("Real Speed2", 0).withSize(1, 1).withPosition(10, 2).getEntry());
+        shuffleboardEntries.put("belt-speed-slider", Shuffleboard.getTab("Jared-Malin").add("Command Speed", beltSpeed).withSize(3, 1).withPosition(8, 3).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 11000)).getEntry());
+        shuffleboardEntries.put("Diggingmotor-temperature-Right", Shuffleboard.getTab("Jared-Malin").add("Leader Temperature", m_belt1.getMotorTemperature() + " C").withSize(1,1).withPosition(9,4).getEntry());
+        shuffleboardEntries.put("Diggingmotor-temperature-Left", Shuffleboard.getTab("Jared-Malin").add("Follower Temperature", m_belt2.getMotorTemperature() + " C").withSize(1,1).withPosition(10,4).getEntry());
     }
 
 
@@ -407,8 +407,8 @@ public class DiggingBelt extends SubsystemBase {
         pidNTEntries.put("belt-kIZ", Shuffleboard.getTab("Digging PID").add("Belt I Zone", BELT_kIZ).getEntry());
         pidNTEntries.put("belt-kFF", Shuffleboard.getTab("Digging PID").add("Belt FF", BELT_kFF).getEntry());
         pidNTEntries.put("belt-setpoint", Shuffleboard.getTab("Digging PID").add("Belt Setpoint", 0).getEntry());
-        pidNTEntries.put("belt-velocity1", Shuffleboard.getTab("Digging PID").add("Belt Velocity1", 0).getEntry());
-        pidNTEntries.put("belt-velocity2", Shuffleboard.getTab("Digging PID").add("Belt Velocity2", 0).getEntry());
+        pidNTEntries.put("belt-velocity-Right", Shuffleboard.getTab("Digging PID").add("Belt Velocity1", 0).getEntry());
+        pidNTEntries.put("belt-velocity-Left", Shuffleboard.getTab("Digging PID").add("Belt Velocity2", 0).getEntry());
     }
 
 
@@ -466,8 +466,8 @@ public class DiggingBelt extends SubsystemBase {
 
         }
         //Set current velocity of the velt in Network Table Entry
-        pidNTEntries.get("belt-velocity1").setDouble(e_belt1.getVelocity());
-        pidNTEntries.get("belt-velocity2").setDouble(e_belt2.getVelocity());
+        pidNTEntries.get("belt-velocity-Right").setDouble(e_belt1.getVelocity());
+        pidNTEntries.get("belt-velocity-Left").setDouble(e_belt2.getVelocity());
     }
 
 
@@ -487,20 +487,20 @@ public class DiggingBelt extends SubsystemBase {
 
         //Update shuffleboard entries
         shuffleboardEntries.get("belt-units").setString(unitFlag ? "RPM" : "m/s");
-        shuffleboardEntries.get("belt-speed1").setDouble(LunaMathUtils.roundToPlace(e_belt1.getVelocity(), 2));
-        shuffleboardEntries.get("belt-speed2").setDouble(LunaMathUtils.roundToPlace(e_belt2.getVelocity(), 2));
+        shuffleboardEntries.get("belt-speed-Right").setDouble(LunaMathUtils.roundToPlace(e_belt1.getVelocity(), 2));
+        shuffleboardEntries.get("belt-speed-Left").setDouble(LunaMathUtils.roundToPlace(e_belt2.getVelocity(), 2));
 
 
         //Report motor temperatures to Shuffleboard
-        shuffleboardEntries.get("motor-temperature-1").setString(""+LunaMathUtils.roundToPlace(m_belt1.getMotorTemperature(), 5));
-        shuffleboardEntries.get("motor-temperature-2").setString(""+LunaMathUtils.roundToPlace(m_belt2.getMotorTemperature(), 5));
+        shuffleboardEntries.get("Diggingmotor-temperature-Right").setString(""+LunaMathUtils.roundToPlace(m_belt1.getMotorTemperature(), 5));
+        shuffleboardEntries.get("Diggingmotor-temperature-Left").setString(""+LunaMathUtils.roundToPlace(m_belt2.getMotorTemperature(), 5));
 
 
         //Update Network Table Entries
-        networkTable.getEntry("beltVelocity1").setDouble(e_belt1.getVelocity());
-        networkTable.getEntry("beltVelocity2").setDouble(e_belt2.getVelocity());
-        networkTable.getEntry("beltCurrent1").setDouble(m_belt1.getOutputCurrent());
-        networkTable.getEntry("beltCurrent2").setDouble(m_belt2.getOutputCurrent());
+        networkTable.getEntry("beltVelocity-Right").setDouble(e_belt1.getVelocity());
+        networkTable.getEntry("beltVelocity-Left").setDouble(e_belt2.getVelocity());
+        networkTable.getEntry("beltCurrent-Right").setDouble(m_belt1.getOutputCurrent());
+        networkTable.getEntry("beltCurrent-Left").setDouble(m_belt2.getOutputCurrent());
     }
 
 

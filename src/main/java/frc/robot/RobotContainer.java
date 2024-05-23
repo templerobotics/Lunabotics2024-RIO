@@ -1,3 +1,4 @@
+
 package frc.robot;
 
 
@@ -32,6 +33,7 @@ import frc.robot.commands.digging.DigForward;
 import frc.robot.commands.digging.DigReverse;
 import frc.robot.subsystems.Digging.DiggingLeadscrew;
 import frc.robot.subsystems.Digging.DiggingLinearActuator;
+
 import frc.robot.subsystems.BMS;
 import static frc.robot.ButtonMapping.*;
 import frc.robot.commands.init.leadscrew.InitLeadscrewDown;
@@ -40,14 +42,19 @@ import frc.robot.commands.dumping.LowerDumpingActuator;
 // Dumping
 import frc.robot.commands.dumping.RaiseDumpingActuator;
 import frc.robot.subsystems.Dumping;
-import frc.robot.commands.auto.AutoDumping;
+import frc.robot.commands.auto.AutoDumpingOpen;
+import frc.robot.commands.auto.AutoDumpingClose;
+import frc.robot.commands.digging.SetDiggingActuatorMaxTravel;
 
-
-import frc.robot.commands.auto.AutoDriveTest;
+import frc.robot.commands.auto.AutoDumpingTest;
 import frc.robot.commands.auto.AutoDiggingTest;
+
+import frc.robot.commands.jaredauto.AutoDumpOpen;
+import frc.robot.commands.jaredauto.AutoDumpClose;
 
 
 public class RobotContainer {
+    public boolean uppies = false;
     private static final int OperatorDigging = 0;
     // Subsystems
     private final Drivebase s_Drivebase = new Drivebase();
@@ -55,7 +62,8 @@ public class RobotContainer {
     private final DiggingLeadscrew s_DiggingLeadscrew = new DiggingLeadscrew();
     private final DiggingBelt s_DiggingBelt = new DiggingBelt();
     private final Dumping s_DumpingLinearActuator = new Dumping();
-    private final DiggingLinearActuator s_DiggingLinearActuator = new DiggingLinearActuator();
+    private final DiggingLinearActuator s_DiggingLinearActuator = new DiggingLinearActuator(!uppies);
+
     private final DumpServo s_ropeServo = new DumpServo();
     private final GearServo s_gearServo = new GearServo();
     // private final BMS s_BMS = new BMS();
@@ -75,7 +83,12 @@ public class RobotContainer {
     private final DigReverse c_DigReverse = new DigReverse(s_DiggingBelt);
     private final ExtendLeadscrew c_ExtendLeadscrew = new ExtendLeadscrew(s_DiggingLeadscrew);
     private final RetractLeadscrew c_RetractLeadscrew = new RetractLeadscrew(s_DiggingLeadscrew);
+
+
     private final RaiseDiggingActuator c_RaiseDiggingActuator = new RaiseDiggingActuator(s_DiggingLinearActuator);
+
+
+    
     private final LowerDiggingActuator c_LowerDiggingActuator = new LowerDiggingActuator(s_DiggingLinearActuator);
     private final InitDiggingActuator c_InitDiggingActuator = new InitDiggingActuator(s_DiggingLinearActuator);
     private final OpenRopeServo c_OpenRopeServo = new OpenRopeServo(s_ropeServo);
@@ -91,13 +104,16 @@ public class RobotContainer {
     private final InitLeadscrewDown c_InitLeadscrewDown = new InitLeadscrewDown(s_DiggingLeadscrew);
     private final InitLeadscrewUp c_InitLeadscrewUp = new InitLeadscrewUp(s_DiggingLeadscrew);
 
-
+    SetDiggingActuatorMaxTravel setMaxTravelTo0_7 = new SetDiggingActuatorMaxTravel(s_DiggingLinearActuator, LINEAR_MAX_TRAVEL2);
+    SetDiggingActuatorMaxTravel setMaxTravelTo0_5 = new SetDiggingActuatorMaxTravel(s_DiggingLinearActuator, LINEAR_MAX_TRAVEL2);
     // Dumping
     private final RaiseDumpingActuator c_RaiseDumpingActuator = new RaiseDumpingActuator(s_DumpingLinearActuator);
     private final LowerDumpingActuator c_LowerDumpingActuator = new LowerDumpingActuator(s_DumpingLinearActuator);
     private final InitDumpingActuator c_InitLinearActuator = new InitDumpingActuator(s_DumpingLinearActuator);
-    private final AutoDumping c_autoDumping = new AutoDumping(s_DumpingLinearActuator, s_ropeServo, s_gearServo, s_DiggingLinearActuator);
-
+    
+    // Jared Auto
+    private final AutoDumpOpen c_JaredAutoDumpOpen = new AutoDumpOpen(s_DiggingLinearActuator, s_DumpingLinearActuator, s_ropeServo);
+    private final AutoDumpClose c_JaredAutoDumpClose = new AutoDumpClose(s_DiggingLinearActuator, s_DumpingLinearActuator, s_ropeServo);
 
     public RobotContainer() {
         s_Drivebase.resetEncoders();
@@ -107,35 +123,51 @@ public class RobotContainer {
 
 
     private void configureButtonBindings() {
-
-
-        POVButton operatorDPadUpButton = new POVButton(i_operatorXbox, DumpUp); // D-Pad Up
+        POVButton operatorDPadUpButton = new POVButton(i_operatorXbox, DumpUp); //DumpUp// D-Pad Up
         operatorDPadUpButton.onTrue(c_RaiseDumpingActuator);
 
-
-        POVButton operatorDPadDownButton = new POVButton(i_operatorXbox, DumpDown); // D-Pad Up
+        POVButton operatorDPadDownButton = new POVButton(i_operatorXbox, DumpDown); //DumpDown // D-Pad Up
         operatorDPadDownButton.onTrue(c_LowerDumpingActuator);
 
-        POVButton operatorDPadLeftButton = new POVButton(i_operatorXbox, 270);
-        operatorDPadLeftButton.onTrue(c_autoDumping);
 
-        POVButton driverDPadLeftButton = new POVButton(i_driverXbox, 270);
-        driverDPadLeftButton.onTrue(c_OpenRopeServo);
 
-        POVButton driverDPadRightButton = new POVButton(i_driverXbox, 90);
-        driverDPadRightButton.onTrue(c_CloseRopeServo);
-
+        
 
         POVButton driverDPadUpButton = new POVButton(i_driverXbox, 0);
-        driverDPadUpButton.onTrue(c_OpenGearServo);
+        driverDPadUpButton.onTrue(c_JaredAutoDumpOpen);
 
-
-        POVButton driverDPadDownButton = new POVButton(i_driverXbox, 180);
-        driverDPadDownButton.onTrue(c_CloseGearServo);
         
+        POVButton driverDPadDownButton = new POVButton(i_driverXbox, 180);
+        driverDPadDownButton.onTrue(c_JaredAutoDumpClose);
+        
+        POVButton driverDPadLeftButton = new POVButton(i_driverXbox, 270);
+        driverDPadLeftButton.toggleOnTrue(c_OpenRopeServo);
+
+        POVButton driverDPadRightButton = new POVButton(i_driverXbox, 90);
+        driverDPadRightButton.toggleOnTrue(c_CloseRopeServo);
+
+
+        // POVButton driverDPadUpButton = new POVButton(i_driverXbox, 0);
+        // driverDPadUpButton.onTrue(c_OpenGearServo);
+
+
+        // POVButton driverDPadDownButton = new POVButton(i_driverXbox, 180);
+        // driverDPadDownButton.onTrue(c_CloseGearServo);
+        
+        /*
         JoystickButton operatorXButton = new JoystickButton(i_operatorXbox, RaiseLinearActuator);
+        
         operatorXButton.whileTrue(c_RaiseDiggingActuator);
 
+        POVButton operatorDPadLeftButton = new POVButton(i_operatorXbox, 270); //DumpDown // D-Pad Up
+        operatorDPadLeftButton.onTrue(c_RaiseDiggingActuator2); */
+
+        
+        POVButton operatorDPadLeftButton = new POVButton(i_operatorXbox, 270);
+        operatorDPadLeftButton.onTrue(setMaxTravelTo0_7);
+ 
+        JoystickButton operatorXButton = new JoystickButton(i_operatorXbox, RaiseLinearActuator);
+        operatorXButton.onTrue(setMaxTravelTo0_5);
 
         JoystickButton operatorBButton = new JoystickButton(i_operatorXbox, LowerLinearActuator);
         operatorBButton.whileTrue(c_LowerDiggingActuator);
@@ -193,7 +225,6 @@ public class RobotContainer {
         return new WaitCommand(8).andThen(c_InitDiggingActuator);
     }
 
-
     public boolean isLeadscrewInitialized(){
         return s_DiggingLeadscrew.isLeadscrewInitialized();
     }
@@ -209,9 +240,9 @@ public class RobotContainer {
 
 
     public Command getAutonomousCommand() {
-        // return new AutoDriveTest(s_Drivebase);
+        return new AutoDumpingTest( c_JaredAutoDumpOpen, c_JaredAutoDumpClose, s_Drivebase, s_DumpingLinearActuator, s_ropeServo, s_DiggingLinearActuator);
 
-        return new AutoDiggingTest(s_DiggingBelt, s_DiggingLeadscrew, s_DiggingLinearActuator);
+        // return new AutoDiggingTest(s_DiggingBelt, s_DiggingLeadscrew, s_DiggingLinearActuator, s_Drivebase, s_DumpingLinearActuator);
       }
     
 }

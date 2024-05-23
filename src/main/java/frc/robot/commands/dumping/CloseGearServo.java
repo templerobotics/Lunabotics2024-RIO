@@ -27,7 +27,7 @@ public class CloseGearServo extends CommandBase
     @Override
     public void execute()
     {
-        if(m_timer < 250)
+        if(m_timer < 50)
         {
             m_subsystem.servoCClockwise();
         }

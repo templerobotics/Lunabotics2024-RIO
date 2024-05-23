@@ -6,35 +6,36 @@
 /*----------------------------------------------------------------------------*/
 
 
-package frc.robot.commands.init;
+package frc.robot.commands.digging;
 
 
-import frc.robot.subsystems.Digging.DiggingLinearActuator;
+import frc.robot.subsystems.Digging.DiggingUppies;
+import frc.robot.subsystems.Digging.DiggingUppies.LinearActuatorStateRight;
+import frc.robot.subsystems.Digging.DiggingUppies.LinearActuatorStateLeft;
+
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
-
-import static frc.robot.Constants.GlobalConstants.*;
-import static frc.robot.Constants.DiggingConstants.LINEAR_MIN_TRAVEL;
 
 
 /**
  * An example command that uses an example subsystem.
  */
-public class InitDiggingActuator extends CommandBase {
+public class RaiseUppies extends CommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-    private final DiggingLinearActuator m_subsystem;
+    private final DiggingUppies m_subsystem;
+    private final DiggingUppies m_subsystem2;
 
-
-    private boolean flag = false;
 
 
     /**
-     * Creates a new InitLinearActuator.
+     * Creates a new RaiseLinearActuator.
      *
      * @param subsystem The subsystem used by this command.
      */
-    public InitDiggingActuator(DiggingLinearActuator subsystem) {
+    public RaiseUppies(DiggingUppies subsystem) {
         m_subsystem = subsystem;
+        m_subsystem2 = subsystem;
+
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(subsystem);
     }
@@ -43,18 +44,15 @@ public class InitDiggingActuator extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_subsystem.linearActuatorInitStart();
+        m_subsystem.linearActuatorRight(LinearActuatorStateRight.Raised);
+        m_subsystem2.linearActuatorLeft(LinearActuatorStateLeft.Raised);
     }
 
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (m_subsystem.getLinearPositionRight() <= LINEAR_MIN_TRAVEL && m_subsystem.getLinearPositionLeft() <= LINEAR_MIN_TRAVEL) {
-            m_subsystem.linearActuatorInitEnd();
-                    flag = true;
-        }
-    } 
+    }
 
 
     // Called once the command ends or is interrupted.
@@ -66,6 +64,6 @@ public class InitDiggingActuator extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return flag;
+        return m_subsystem.linearActuatorStateRight() == LinearActuatorStateRight.Raised && m_subsystem2.linearActuatorStateLeft() == LinearActuatorStateLeft.Raised;
     }
 }

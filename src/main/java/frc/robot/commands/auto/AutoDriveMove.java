@@ -17,7 +17,7 @@ public class AutoDriveMove extends CommandBase {
     public void initialize() {
         m_timer = 0;
         System.out.println("hello world");
-        m_Drivebase.drive(1, 1);
+        m_Drivebase.drive(-1, -1);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class AutoDriveMove extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (m_timer > 20);
+        return (m_timer > 8);
     }
 
 }

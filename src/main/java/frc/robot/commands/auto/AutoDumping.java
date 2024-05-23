@@ -1,78 +1,110 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.commands.auto;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Dumping;
-import frc.robot.subsystems.GearServo;
-import frc.robot.subsystems.Digging.DiggingLinearActuator;
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.commands.jaredauto.AutoDumpClose;
+import frc.robot.commands.jaredauto.AutoDumpOpen;
+import frc.robot.subsystems.Drivebase;
 import frc.robot.subsystems.DumpServo;
+import frc.robot.subsystems.Dumping;
+import frc.robot.subsystems.Digging.DiggingLinearActuator;
+import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.subsystems.Dumping.LinearActuatorState;
 
 
-public class AutoDumping extends CommandBase
+
+
+public class AutoDumping extends CommandBase 
 {
-    Dumping m_Dumping;
-    DumpServo m_DumpServo;
-    GearServo m_GearServo;
-    DiggingLinearActuator m_LinearActuator;
-    private long startTime;
+  AutoDumpOpen m_AutoDumpingOpen;
+  AutoDumpClose m_AutoDumpingClose;
+  Drivebase m_Drivebase;
+  DiggingLinearActuator m_DiggingLinear;
+  Dumping m_Dumping;
+  DumpServo m_DumpServo;
+  
 
-    public AutoDumping(Dumping dumping, DumpServo dumpServo, GearServo gearServo, DiggingLinearActuator diggingLinearActuator)
+  private final Timer timer = new Timer();
+  private final Timer servoTimer = new Timer();  // Additional timer for servo operation
+  private boolean servoActive;  // Flag to check if servo operation is ongoing
+
+  
+  public AutoDumping(AutoDumpOpen autoDumpingOpen, AutoDumpClose autoDumpingClose, Drivebase drivebase, Dumping dumping, DumpServo dumpServo, DiggingLinearActuator diggingLinearActuator) 
+  {
+    m_AutoDumpingOpen = autoDumpingOpen;
+    m_AutoDumpingClose = autoDumpingClose;
+    m_Drivebase = drivebase;
+    m_DumpServo = dumpServo;
+    m_DiggingLinear = diggingLinearActuator;
+    addRequirements(m_Drivebase, m_DumpServo, m_DiggingLinear);
+  }
+
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() 
+  {
+    timer.stop();
+    timer.reset();
+    servoTimer.stop();
+    servoTimer.reset();
+    servoActive = false; 
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() 
+  {
+    timer.start();
+    while(timer.get() >= 0 && timer.get() <= 2)
     {
-        m_Dumping = dumping;
-        m_DumpServo = dumpServo;
-        m_GearServo = gearServo;
-        m_LinearActuator = diggingLinearActuator;
-
-        addRequirements(dumping);
-        addRequirements(dumpServo);
-        addRequirements(gearServo);
-        addRequirements(diggingLinearActuator);
+      m_Drivebase.drive(-1, -1);
     }
+    m_Drivebase.drive(0, 0);
+    // double currentTime = timer.get();
 
-    @Override
-    public void initialize() 
-    {
-
-    }
-
-    @Override
-    public void execute()
-    {
-        if (startTime == 0) {
-            startTime = System.currentTimeMillis();
-        }
-        while(!isFinished())
+    if (!servoActive) {
+        servoTimer.start();
+        while(timer.get() < 0.7)
         {
-            m_LinearActuator.linearActuatorInitStart();
-            try {
-                Thread.sleep(4000); // Wait for linear actuator initialization
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            m_DumpServo.servoClockwise();
-            m_GearServo.servoClockwise();
-            m_Dumping.commandUp();
+            m_DumpServo.servoCClockwise();
         }
+        servoActive = true;
     }
 
-    @Override
-    public void end(boolean interrupted)
+    m_DumpServo.stopServo();
+    if (servoActive) {
+        servoTimer.stop();
+        servoTimer.reset();
+        servoActive = false;
+    }
+    while(!m_DiggingLinear.isLinearActuatorInitialized())
     {
-        m_Dumping.linearActuatorInitStart();
-        m_DumpServo.servoCClockwise();
-        m_GearServo.servoCClockwise();
-        try {
-            Thread.sleep(8000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        m_LinearActuator.linearActuatorInitStart();
-
+      if (m_DiggingLinear.isLinearActuatorInitializedAutoDigging()) 
+      {
+          m_DiggingLinear.linearActuatorInitEndAutoDigging();
+      }
+      else
+      {
+        m_DiggingLinear.commandUp();
+      }
+      if (m_Dumping.isLinearActuatorInitialized() && servoTimer >= 4) 
+      {
+          m_Dumping.linearActuator(LinearActuatorState.Raised);
+      }
     }
 
-    @Override
-    public boolean isFinished() 
-    {
-        return System.currentTimeMillis() - startTime >= 25000; // Finish after 20 seconds
-    }
+  }
 
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {}
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
 }

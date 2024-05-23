@@ -7,6 +7,9 @@ public final class ButtonMapping {
     public final static int DumpUp = 0; // D-Pad Up
     public final static int DumpDown = 180; // D-Pad Down
     public final static int OperatorDrive = 90; // D-Pad Right
+    public final static double LINEAR_MAX_TRAVEL2 = 0.7;
+    public final static double LINEAR_MAX_TRAVEL = 0.7;//0.5
+
     public final static int DigForward = XboxController.Button.kY.value;
     public final static int DigReverse = XboxController.Button.kA.value;
     public final static int RetractLeadscrew = XboxController.Button.kRightBumper.value;

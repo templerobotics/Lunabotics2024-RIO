@@ -2,45 +2,118 @@ package frc.robot.commands.dumping;
 
 import frc.robot.subsystems.DumpServo;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.*;
 
-public class OpenRopeServo extends CommandBase {
+
+
+public class OpenRopeServo extends CommandBase
+{
+
     private final DumpServo m_subsystem;
-    private int m_timer = 0;  // Timer to keep track of the elapsed time in ticks
+    private final Timer timer = new Timer();
+    private boolean sequenceIsDone;
+
 
     /**
      * Creates a new OpenRopeServo command.
      *
      * @param subsystem The subsystem used by this command.
      */
-    public OpenRopeServo(DumpServo subsystem) {
+
+    public OpenRopeServo(DumpServo subsystem)
+    {
         m_subsystem = subsystem;
         addRequirements(subsystem);
+        sequenceIsDone = false;
     }
 
-    // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_timer = 0;
+        timer.reset();
+        timer.start();
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
     @Override
-    public void execute() {
-        if (m_timer < 250) {  // 250 ticks at 20 ms per tick is 5 seconds
-            m_subsystem.servoClockwise();
+    public void execute()
+    {
+        double currentTime = timer.get();
+        // if(currentTime < 1)
+        // {
+        //     new SequentialCommandGroup(
+        //         new WaitCommand(1),  // Wait for 1 seconds
+        //         new InstantCommand(() ->m_subsystem.servoCClockwise(), m_subsystem)).schedule();
+        //     sequenceIsDone = true;
+        // } else {
+        //     sequenceIsDone = true;
+        //     m_subsystem.stopRope();
+        // }
+        while(timer.get() < 0.5)
+        {
+            m_subsystem.servoCClockwise();
         }
-        m_timer++;  // Increment the timer on each execution
+        m_subsystem.stopServo();
+        sequenceIsDone = true;
     }
 
-    // Called once the command ends or is interrupted.
-    @Override
-    public void end(boolean interrupted) {
-        m_subsystem.stopRope();  // Stop the servo when the command ends or is interrupted
+    public void end(boolean interrupted)
+    {
+        if (interrupted) {
+            m_subsystem.stopRope();
+        }
     }
 
-    // Returns true when the command should end.
+
     @Override
-    public boolean isFinished() {
-        return m_timer >= 250;  // End the command after 5 seconds
+    public boolean isFinished()
+    {
+        return sequenceIsDone;
     }
+
 }
+
+// package frc.robot.commands.dumping;
+
+// import frc.robot.subsystems.DumpServo;
+// import edu.wpi.first.wpilibj2.command.CommandBase;
+// import edu.wpi.first.wpilibj.Timer;
+
+// public class OpenRopeServo extends CommandBase
+// {
+
+//     private final DumpServo m_subsystem;
+
+
+//     /**
+//      * Creates a new OpenRopeServo command.
+//      *
+//      * @param subsystem The subsystem used by this command.
+//      */
+
+//     public OpenRopeServo(DumpServo subsystem)
+//     {
+//         m_subsystem = subsystem;
+//         addRequirements(subsystem);
+//     }
+
+//     @Override
+//     public void initialize() {}
+
+//     // Called every time the scheduler runs while the command is scheduled.
+//     @Override
+//     public void execute() {
+//             m_subsystem.servoCClockwise();
+
+//     }
+
+//     // Called once the command ends or is interrupted.
+//     @Override
+//     public void end(boolean interrupted) {
+//         m_subsystem.stopRope();  // Stop the servo when the command ends or is interrupted
+//     }
+
+//     @Override
+//     public boolean isFinished() {
+//         return false; 
+//     }
+// }
