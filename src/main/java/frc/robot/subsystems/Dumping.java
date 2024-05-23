@@ -157,8 +157,7 @@ public class Dumping extends SubsystemBase {
 
     public void linearActuatorInitStart() 
     {
-        // linearDown();
-        // linearUp();
+        linearDown();
     }
 
     public double linearActuatorGetRawPotentiometer() {

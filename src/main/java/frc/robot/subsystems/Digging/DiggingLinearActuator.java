@@ -212,14 +212,13 @@ public class DiggingLinearActuator extends SubsystemBase {
 
 
     public void linearActuatorInitStart() {
-        // linearDown();
-        //linearUp();
-
+        linearDown();
     }
 
     public void linearActuatorInitStartAuto()
     {
         linearUp();
+        linearInitializedAutoDigging = false;
     }
 
 

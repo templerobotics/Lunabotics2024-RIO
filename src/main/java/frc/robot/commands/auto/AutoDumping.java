@@ -30,6 +30,7 @@ public class AutoDumping extends CommandBase
   private final Timer timer = new Timer();
   private final Timer servoTimer = new Timer();  // Additional timer for servo operation
   private boolean servoActive;  // Flag to check if servo operation is ongoing
+  private boolean dumpingFinished;
 
   
   public AutoDumping(AutoDumpOpen autoDumpingOpen, AutoDumpClose autoDumpingClose, Drivebase drivebase, Dumping dumping, DumpServo dumpServo, DiggingLinearActuator diggingLinearActuator) 
@@ -51,6 +52,8 @@ public class AutoDumping extends CommandBase
     servoTimer.stop();
     servoTimer.reset();
     servoActive = false; 
+    dumpingFinished = false;
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -76,28 +79,21 @@ public class AutoDumping extends CommandBase
 
     m_DumpServo.stopServo();
     if (servoActive) {
-        servoTimer.stop();
-        servoTimer.reset();
         servoActive = false;
     }
-    while(!m_DiggingLinear.isLinearActuatorInitialized())
+    while(!m_DiggingLinear.isLinearActuatorInitializedAutoDigging())
     {
-      if (m_DiggingLinear.isLinearActuatorInitializedAutoDigging()) 
-      {
-          m_DiggingLinear.linearActuatorInitEndAutoDigging();
-      }
-      else
-      {
-        m_DiggingLinear.commandUp();
-      }
-      if (m_Dumping.isLinearActuatorInitialized() && servoTimer >= 4) 
+      new SequentialCommandGroup(
+        new InstantCommand(() -> m_DiggingLinear.linearActuatorInitStartAuto(), m_DiggingLinear),
+        new WaitCommand(4),  // Wait for 4 seconds
+        new InstantCommand(() -> m_DiggingLinear.linearActuatorInitEndAutoDigging(), m_DiggingLinear),
+        new InstantCommand(() -> m_Dumping.linearActuator(LinearActuatorState.Raised), m_Dumping)).schedule();
+    }
+    if(m_Dumping.isLinearActuatorInitialized()) 
       {
           m_Dumping.linearActuator(LinearActuatorState.Raised);
       }
-    }
-
   }
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
