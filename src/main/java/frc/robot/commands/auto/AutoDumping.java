@@ -77,22 +77,16 @@ public class AutoDumping extends CommandBase
         servoActive = true;
     }
 
-    m_DumpServo.stopServo();
     if (servoActive) {
-        servoActive = false;
+      m_DumpServo.stopServo();
+      servoActive = false;
     }
-    while(!m_DiggingLinear.isLinearActuatorInitializedAutoDigging())
-    {
+
       new SequentialCommandGroup(
         new InstantCommand(() -> m_DiggingLinear.linearActuatorInitStartAuto(), m_DiggingLinear),
         new WaitCommand(4),  // Wait for 4 seconds
         new InstantCommand(() -> m_DiggingLinear.linearActuatorInitEndAutoDigging(), m_DiggingLinear),
         new InstantCommand(() -> m_Dumping.linearActuator(LinearActuatorState.Raised), m_Dumping)).schedule();
-    }
-    if(m_Dumping.isLinearActuatorInitialized()) 
-      {
-          m_Dumping.linearActuator(LinearActuatorState.Raised);
-      }
   }
   // Called once the command ends or is interrupted.
   @Override
