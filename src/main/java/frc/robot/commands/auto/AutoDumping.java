@@ -67,7 +67,7 @@ public class AutoDumping extends CommandBase
 
     if (!servoActive) {
         servoTimer.start();
-        while(timer.get() < 0.7)
+        while(servoTimer.get() < 0.7)
         {
             m_DumpServo.servoCClockwise();
         }
