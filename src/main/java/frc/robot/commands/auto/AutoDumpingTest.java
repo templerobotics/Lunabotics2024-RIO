@@ -22,5 +22,4 @@ public class AutoDumpingTest extends ParallelCommandGroup {
         new AutoDumping(autoDumpingOpen, autoDumpingClose, drivebase, dumping, dumpServo, diggingLinearActuator)
       );
   }
-
 }
